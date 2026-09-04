@@ -44,3 +44,6 @@ dev-server.log
 *.tsbuildinfo
 next-env.d.ts
 /public/phone-mockup.html
+/dist/
+.vinext/
+.wrangler/
