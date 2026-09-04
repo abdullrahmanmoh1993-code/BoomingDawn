@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 const DESKTOP_VIDEO = "/images/brand/hero-video.mp4";
@@ -10,30 +10,22 @@ const MOBILE_VIDEO = "/images/brand/hero-video-mobile.mp4";
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoSrc, setVideoSrc] = useState<string | null>(null);
 
-  // Resolve the correct video file only after hydration so mobile never
-  // downloads the heavy desktop file (and SSR never ships a <source> at all).
+  // Sources ship in SSR (via <source media> matching) so the browser picks the
+  // right tier and starts downloading at TTFB instead of after hydration, which
+  // is what the poster/dawn-surface eventually hand off to. Reduced-motion
+  // visitors still get the short file (poster + dawn surface) but never autoplay.
   useEffect(() => {
-    if (prefersReducedMotion) return;
-    const mq = window.matchMedia("(max-width: 767px)");
-    const pick = (matches: boolean) => setVideoSrc(matches ? MOBILE_VIDEO : DESKTOP_VIDEO);
-    pick(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => pick(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, [prefersReducedMotion]);
-
-  // Play once the source is resolved (replaces autoPlay so the browser never
-  // starts two downloads).
-  useEffect(() => {
-    if (prefersReducedMotion || !videoSrc) return;
     const video = videoRef.current;
     if (!video) return;
-    video.src = videoSrc;
-    video.load();
+    if (prefersReducedMotion) {
+      video.pause();
+      for (const s of Array.from(video.querySelectorAll("source"))) s.remove();
+      video.load();
+      return;
+    }
     video.play().catch(() => {});
-  }, [videoSrc, prefersReducedMotion]);
+  }, [prefersReducedMotion]);
 
   return (
     <section className="video-hero relative w-full flex items-center justify-center overflow-hidden bg-background">
@@ -49,10 +41,13 @@ export function Hero() {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster="/images/brand/hero-poster.png"
         aria-hidden="true"
-      />
+      >
+        <source media="(max-width: 767px)" src={MOBILE_VIDEO} type="video/mp4" />
+        <source src={DESKTOP_VIDEO} type="video/mp4" />
+      </video>
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
 
       {/* Content */}
