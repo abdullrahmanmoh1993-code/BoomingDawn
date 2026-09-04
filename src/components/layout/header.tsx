@@ -61,7 +61,7 @@ export function Header() {
         )}
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[64px] overflow-hidden">
+          <div className="flex items-center justify-between h-[64px] overflow-visible">
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -110,7 +110,7 @@ export function Header() {
               >
                 <Heart size={18} />
                 {badgeWishlist > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                  <span className="absolute -top-1.5 -right-1.5 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                     {badgeWishlist}
                   </span>
                 )}
@@ -122,7 +122,7 @@ export function Header() {
               >
                 <ShoppingBag size={18} />
                 {badgeCart > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                  <span className="absolute -top-1.5 -right-1.5 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                     {badgeCart}
                   </span>
                 )}
