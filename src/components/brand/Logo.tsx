@@ -13,7 +13,7 @@ interface LogoProps {
 export function Logo({ className, width = 200, height = 200 }: LogoProps) {
   return (
     <svg
-      viewBox="0 0 200 200"
+      viewBox="0 10 200 150"
       width={width}
       height={height}
       className={className}

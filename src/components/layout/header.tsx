@@ -61,7 +61,7 @@ export function Header() {
         )}
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[72px] lg:h-20 pb-2 overflow-visible">
+          <div className="flex items-center justify-between h-[64px] overflow-hidden">
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -84,13 +84,13 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Logo - centered */}
+            {/* Logo - fills the full bar height, centered */}
             <Link
               href="/"
-              className="absolute left-1/2 -translate-x-1/2 flex items-center"
+              className="absolute left-1/2 top-0 -translate-x-1/2 h-full flex items-center"
               aria-label="The Booming Dawn - home"
             >
-              <Logo className="shrink-0 h-[72px] lg:h-20 w-auto" />
+              <Logo className="object-contain shrink-0 h-full w-auto" />
             </Link>
 
             {/* Actions */}
