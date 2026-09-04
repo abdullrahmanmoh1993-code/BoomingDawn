@@ -90,7 +90,7 @@ export function Header() {
               className="absolute left-1/2 -translate-x-1/2 flex items-center"
               aria-label="The Booming Dawn - home"
             >
-              <Logo className="shrink-0 h-12 lg:h-14 w-auto" />
+              <Logo className="shrink-0 h-[57.6px] lg:h-[67.2px] w-auto" />
             </Link>
 
             {/* Actions */}
