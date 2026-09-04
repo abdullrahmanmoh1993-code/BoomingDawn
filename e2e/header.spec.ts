@@ -115,7 +115,8 @@ test("all header controls are visible and inside the viewport", async ({
   const wishlist = page.getByRole("link", { name: /Wishlist/ });
 
   const controls = [search, cart, wishlist];
-  if (test.info().project.name === "mobile") {
+  // Hamburger exists on the mobile projects only (desktop hides it).
+  if (test.info().project.name !== "desktop-chromium") {
     controls.push(menuButton);
   }
 
