@@ -1,30 +1,58 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
+const DESKTOP_VIDEO = "/images/brand/hero-video.mp4";
+const MOBILE_VIDEO = "/images/brand/hero-video-mobile.mp4";
+
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+
+  // Resolve the correct video file only after hydration so mobile never
+  // downloads the heavy desktop file (and SSR never ships a <source> at all).
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const pick = (matches: boolean) => setVideoSrc(matches ? MOBILE_VIDEO : DESKTOP_VIDEO);
+    pick(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => pick(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [prefersReducedMotion]);
+
+  // Play once the source is resolved (replaces autoPlay so the browser never
+  // starts two downloads).
+  useEffect(() => {
+    if (prefersReducedMotion || !videoSrc) return;
+    const video = videoRef.current;
+    if (!video) return;
+    video.src = videoSrc;
+    video.load();
+    video.play().catch(() => {});
+  }, [videoSrc, prefersReducedMotion]);
 
   return (
     <section className="video-hero relative w-full h-screen flex items-center justify-center overflow-hidden bg-foreground">
       {/* Full-screen background video with poster fallback */}
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        autoPlay={!prefersReducedMotion}
         muted
         loop
         playsInline
+        preload="metadata"
         poster="/images/brand/hero-poster.png"
         aria-hidden="true"
-      >
-        <source src="/images/brand/hero-video.mp4" type="video/mp4" />
-      </video>
+      />
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/70" />
 
       {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-3xl mx-auto pt-16">
+      <div className="relative z-10 text-center px-4 max-w-3xl mx-auto pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.5rem))]">
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,7 +84,7 @@ export function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        className="absolute bottom-[max(2rem,calc(env(safe-area-inset-bottom,0px)_+_1rem))] left-1/2 -translate-x-1/2"
       >
         <motion.div
           animate={{ y: [0, 8, 0] }}

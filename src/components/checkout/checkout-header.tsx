@@ -5,7 +5,7 @@ import { ShieldCheck } from "lucide-react";
 /** Minimal, distraction-free checkout header — no full site navigation. */
 export function CheckoutHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-background border-b border-border">
+    <header className="sticky top-0 z-40 bg-background border-b border-border pt-[env(safe-area-inset-top,0px)]">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link
@@ -13,7 +13,7 @@ export function CheckoutHeader() {
             className="flex items-center gap-2"
             aria-label="Return to home"
           >
-            <Logo className="h-11 w-auto" />
+            <Logo className="h-11 w-auto" width={59} height={44} />
           </Link>
 
           <div className="flex items-center gap-2 text-xs">

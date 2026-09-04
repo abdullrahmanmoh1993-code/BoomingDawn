@@ -61,15 +61,31 @@ export function Header() {
         )}
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-[64px] overflow-visible">
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 -ml-2"
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            >
-              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
+          <div className="flex items-center justify-between min-h-[64px] lg:h-[64px] pt-[env(safe-area-inset-top,0px)] overflow-visible">
+            {/* Left cluster: hamburger + logo on mobile, centered logo on desktop */}
+            <div className="flex items-center gap-2 lg:absolute lg:left-1/2 lg:top-0 lg:-translate-x-1/2 lg:h-full lg:gap-0">
+              {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="lg:hidden p-2 -ml-2 min-w-11 min-h-11 flex items-center justify-center"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              >
+                {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+
+              {/* Logo */}
+              <Link
+                href="/"
+                className="flex items-center"
+                aria-label="The Booming Dawn - home"
+              >
+                <Logo
+                  className="h-10 lg:h-full w-auto object-contain shrink-0"
+                  width={53}
+                  height={40}
+                />
+              </Link>
+            </div>
 
             {/* Navigation - Desktop */}
             <nav className="hidden lg:flex items-center gap-8" aria-label="Main navigation">
@@ -84,28 +100,19 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Logo - fills the full bar height, centered */}
-            <Link
-              href="/"
-              className="absolute left-1/2 top-0 -translate-x-1/2 h-full flex items-center"
-              aria-label="The Booming Dawn - home"
-            >
-              <Logo className="object-contain shrink-0 h-full w-auto" />
-            </Link>
-
             {/* Actions */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 lg:gap-2">
               <button
                 onClick={() => setSearchOpen(true)}
-                className="p-2 hover:bg-foreground/5 transition-colors rounded-full"
+                className="p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors rounded-full"
                 aria-label="Search"
               >
                 <Search size={18} />
               </button>
-              <ThemeToggle className="hidden sm:flex" />
+              <ThemeToggle className="hidden sm:flex min-w-11 min-h-11 items-center justify-center" />
               <Link
                 href="/wishlist"
-                className="p-2 hover:bg-foreground/5 transition-colors rounded-full relative"
+                className="p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors rounded-full relative"
                 aria-label={`Wishlist (${badgeWishlist} items)`}
               >
                 <Heart size={18} />
@@ -117,7 +124,7 @@ export function Header() {
               </Link>
               <button
                 onClick={openCart}
-                className="p-2 hover:bg-foreground/5 transition-colors rounded-full relative"
+                className="p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors rounded-full relative"
                 aria-label={`Shopping bag (${badgeCart} items)`}
               >
                 <ShoppingBag size={18} />

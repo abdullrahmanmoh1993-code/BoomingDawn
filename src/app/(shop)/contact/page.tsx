@@ -38,7 +38,7 @@ export default function ContactPage() {
 
   if (submitted) {
     return (
-      <div className="pt-16 lg:pt-20">
+      <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
         <div className="max-w-xl mx-auto px-4 py-24 lg:py-32 text-center">
           <h1 className="font-display text-booming-red text-3xl sm:text-4xl mb-4">
             Message Sent
@@ -53,7 +53,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="pt-16 lg:pt-20">
+    <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
         <div className="text-center mb-16">
           <p className="text-xs uppercase tracking-[0.3em] text-muted mb-4">

@@ -46,7 +46,7 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="py-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="pt-6 pb-[max(1.5rem,calc(env(safe-area-inset-bottom,0px)_+_1.5rem))] sm:pb-[max(1.5rem,calc(env(safe-area-inset-bottom,0px)_+_1rem))] border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted">
             &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
           </p>

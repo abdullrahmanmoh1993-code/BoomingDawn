@@ -53,7 +53,7 @@ function SearchContent({ onClose }: { onClose: () => void }) {
   }, [query]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pt-20">
+    <div className="max-w-2xl mx-auto px-4 pt-[max(5rem,calc(env(safe-area-inset-top,0px)_+_2.5rem))]">
       {/* Search Input */}
       <div className="relative">
         <Search size={20} className="absolute left-0 top-1/2 -translate-y-1/2 text-muted" />
@@ -68,7 +68,7 @@ function SearchContent({ onClose }: { onClose: () => void }) {
         />
         <button
           onClick={onClose}
-          className="absolute right-0 top-1/2 -translate-y-1/2 p-1 hover:bg-foreground/5 transition-colors"
+          className="absolute right-0 top-1/2 -translate-y-1/2 p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors"
           aria-label="Close search"
         >
           <X size={20} />

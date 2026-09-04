@@ -1,7 +1,16 @@
 import { Inter, Anton, Cairo } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { siteConfig } from "@/lib/constants";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  // Let content extend edge-to-edge so env(safe-area-inset-*) becomes
+  // meaningful; safe areas are then handled explicitly in the layout.
+  viewportFit: "cover",
+  themeColor: "#000000",
+};
 
 const anton = Anton({
   variable: "--font-anton",

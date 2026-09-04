@@ -15,6 +15,7 @@ export default defineConfig({
     {
       name: "mobile",
       use: { ...devices["iPhone 13"], browserName: "chromium" },
+      testMatch: /header\.spec\.ts/,
     },
     {
       name: "desktop-chromium",

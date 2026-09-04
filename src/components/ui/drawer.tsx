@@ -95,19 +95,19 @@ export function Drawer({
             aria-modal="true"
             aria-label={title}
           >
-            <div className="flex items-center justify-between p-6 border-b border-border">
+            <div className="flex items-center justify-between px-6 pb-6 pt-[max(1.5rem,calc(env(safe-area-inset-top,0px)_+_0.75rem))] border-b border-border">
               {title && (
                 <h2 className="text-lg font-display font-medium">{title}</h2>
               )}
               <button
                 onClick={onClose}
-                className="p-1 hover:bg-foreground/5 transition-colors ml-auto"
+                className="p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors ml-auto"
                 aria-label="Close"
               >
                 <X size={20} />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-6">{children}</div>
+            <div className="flex-1 overflow-y-auto p-6 pb-[max(1.5rem,calc(env(safe-area-inset-bottom,0px)_+_1.5rem))]">{children}</div>
           </motion.div>
         </>
       )}

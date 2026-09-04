@@ -26,7 +26,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
             transition={{ delay: 0.1 }}
-            className="relative pt-20 pb-8 px-6"
+            className="relative pt-[calc(5rem_+_env(safe-area-inset-top,0px))] pb-[calc(2rem_+_env(safe-area-inset-bottom,0px))] px-6"
             aria-label="Mobile navigation"
           >
             <ul className="space-y-1">

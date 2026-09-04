@@ -6,7 +6,7 @@ export const metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="pt-16 lg:pt-20">
+    <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       <section className="py-20 lg:py-28 border-b border-border">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <p className="text-xs uppercase tracking-[0.3em] text-muted mb-3">

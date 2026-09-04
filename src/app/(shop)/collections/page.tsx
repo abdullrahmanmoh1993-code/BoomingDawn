@@ -8,7 +8,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function CollectionsPage() {
   return (
-    <div className="pt-16 lg:pt-20">
+    <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       {/* Header */}
       <section className="py-16 lg:py-24 border-b border-border">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">

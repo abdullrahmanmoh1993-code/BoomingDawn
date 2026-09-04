@@ -11,7 +11,7 @@ export default function WishlistPage() {
   const wishlistProducts = products.filter((p) => productIds.includes(p.id));
 
   return (
-    <div className="pt-16 lg:pt-20">
+    <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="mb-10">
           <p className="text-xs uppercase tracking-[0.3em] text-muted mb-3">

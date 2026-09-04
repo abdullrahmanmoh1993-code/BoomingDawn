@@ -40,12 +40,46 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  background: var(--background);
+  /* Frame the experience inside the device screen:
+     - `clip` (not `hidden`) clips overflow without creating a scroll
+       container, so position:sticky (dawn-stages) keeps working.
+     - Decorative slide-in motion offsets (framer-motion x:±30) are meant to
+       arrive from off-screen; clipping them is the intended design behavior,
+       not a mask for a layout bug. */
+  overflow-x: clip;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+  /* Subtle, premium page fade-in on full page loads.
+     Uses `backwards` so the first painted frame is already at opacity 0
+     (no visible->hidden->fade hitch), then eases to fully visible.
+     The animation runs once per full document load; client-side route
+     changes do not replay it because <body> persists across navigations. */
+  animation: page-fade-in 0.55s ease-out backwards;
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 ::selection {
