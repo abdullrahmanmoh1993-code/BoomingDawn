@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { cn, formatPrice } from "@/lib/utils";
 import { products } from "@/lib/data";
@@ -49,10 +50,12 @@ export function OrderSummary({
           if (!resolved) return null;
           return (
             <li key={`${item.productId}-${item.variantId}`} className="flex gap-3">
-              <div className="shrink-0 w-14 h-[70px] bg-muted/10 overflow-hidden">
-                <img
+              <div className="relative shrink-0 w-14 h-[70px] bg-muted/10 overflow-hidden">
+                <Image
                   src={resolved.image}
                   alt=""
+                  fill
+                  sizes="56px"
                   className="w-full h-full object-cover"
                 />
               </div>

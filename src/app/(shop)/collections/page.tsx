@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { collections } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
@@ -39,9 +40,11 @@ export default function CollectionsPage() {
               >
                 <Link href={`/collections/${collection.slug}`} className="block">
                   <div className="relative aspect-[3/4] overflow-hidden">
-                    <img
+                    <Image
                       src={collection.image.src}
                       alt={collection.image.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors" />

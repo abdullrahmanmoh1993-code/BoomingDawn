@@ -15,19 +15,19 @@ const STAGES: StageVisual[] = [
   {
     stage: "nautical",
     background: "/images/dawn/nautical.jpg",
-    product: "/images/products/nautical-tee.png",
+    product: "/images/products/nautical-tee.webp",
     productAlt: "The Nautical Tee stage",
   },
   {
     stage: "astronomical",
     background: "/images/dawn/astronomical.jpg",
-    product: "/images/products/astronomical-tee.png",
+    product: "/images/products/astronomical-tee.webp",
     productAlt: "The Astronomical Tee stage",
   },
   {
     stage: "orange-rising",
     background: "/images/dawn/orange-rising.jpg",
-    product: "/images/products/civil-workshirt.png",
+    product: "/images/products/civil-workshirt.webp",
     productAlt: "The Orange Rising workshirt stage",
   },
 ];
@@ -53,6 +53,23 @@ export function DawnStages() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (reduceMotion) {
+      STAGES.forEach((_, i) => {
+        const bg = bgRefs.current[i];
+        const product = productRefs.current[i];
+        const text = textRefs.current[i];
+        const o = i === 0 ? 1 : 0;
+        if (bg) bg.style.opacity = String(o);
+        if (product) product.style.opacity = String(o);
+        if (text) text.style.opacity = String(o);
+      });
+      return;
+    }
 
     let ticking = false;
     let sectionTop = 0;
@@ -166,6 +183,7 @@ export function DawnStages() {
 
         {/* Products */}
         {STAGES.map((s, i) => (
+          // eslint-disable-next-line @next/next/no-img-element -- HTML cutout sized via scroll refs; not suitable for next/image fill
           <img
             key={s.stage}
             ref={(el) => {

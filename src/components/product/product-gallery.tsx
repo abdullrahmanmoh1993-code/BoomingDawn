@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/lib/types";
@@ -23,16 +24,18 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             key={i}
             onClick={() => setActiveIndex(i)}
             className={cn(
-              "aspect-[4/5] overflow-hidden border transition-colors",
+              "relative aspect-[4/5] overflow-hidden border transition-colors",
               activeIndex === i
                 ? "border-foreground"
                 : "border-transparent hover:border-border"
             )}
             aria-label={`View image ${i + 1} of ${productName}`}
           >
-            <img
+            <Image
               src={image.src}
               alt={image.alt}
+              fill
+              sizes="80px"
               className="w-full h-full object-cover"
             />
           </button>
@@ -55,9 +58,11 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
             onMouseEnter={() => setIsZoomed(true)}
             onMouseLeave={() => setIsZoomed(false)}
           >
-            <img
+            <Image
               src={images[activeIndex]?.src}
               alt={images[activeIndex]?.alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 60vw"
               className={cn(
                 "w-full h-full object-cover transition-transform duration-500",
                 isZoomed && "scale-125 cursor-zoom-out"

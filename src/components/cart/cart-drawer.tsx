@@ -7,6 +7,7 @@ import { products } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function CartDrawer() {
   const items = useCartStore((s) => s.items);
@@ -53,11 +54,13 @@ export function CartDrawer() {
                 <Link
                   href={`/products/${product.slug}`}
                   onClick={closeCart}
-                  className="shrink-0 w-20 h-24 bg-muted/10 overflow-hidden"
+                  className="relative shrink-0 w-20 h-24 bg-muted/10 overflow-hidden"
                 >
-                  <img
+                  <Image
                     src={product.images[0]?.src}
                     alt={product.images[0]?.alt}
+                    fill
+                    sizes="80px"
                     className="w-full h-full object-cover"
                   />
                 </Link>

@@ -26,7 +26,7 @@ export const products: Product[] = [
     ],
     images: [
       {
-        src: "/images/products/nautical-tee-float.png",
+        src: "/images/products/nautical-tee-float.webp",
         alt: "The Nautical Tee, floating detail",
         width: 1376,
         height: 1824,
@@ -76,7 +76,7 @@ export const products: Product[] = [
     ],
     images: [
       {
-        src: "/images/products/astronomical-tee-float.png",
+        src: "/images/products/astronomical-tee-float.webp",
         alt: "The Astronomical Tee, floating detail",
         width: 1376,
         height: 1824,
@@ -125,7 +125,7 @@ export const products: Product[] = [
     ],
     images: [
       {
-        src: "/images/products/civil-workshirt-float.png",
+        src: "/images/products/civil-workshirt-float.webp",
         alt: "The Civil Workshirt, floating detail",
         width: 1728,
         height: 1408,

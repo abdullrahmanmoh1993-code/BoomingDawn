@@ -6,6 +6,14 @@ import { Editorial } from "@/components/home/editorial";
 import { Newsletter } from "@/components/home/newsletter";
 import { Slogan } from "@/components/brand/Slogan";
 
+export const metadata = {
+  title: {
+    absolute: "The Booming Dawn | الفجر الصاخب",
+  },
+  description:
+    "Streetwear for the fearless. Soft cotton, loud graphics, statement tees designed in Cairo, Egypt.",
+};
+
 export default function HomePage() {
   return (
     <>

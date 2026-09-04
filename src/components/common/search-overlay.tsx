@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -90,10 +91,12 @@ function SearchContent({ onClose }: { onClose: () => void }) {
                     onClick={onClose}
                     className="flex items-center gap-4 p-3 -mx-3 hover:bg-foreground/5 transition-colors group"
                   >
-                    <div className="w-16 h-20 bg-muted/20 flex-shrink-0 overflow-hidden">
-                      <img
+                    <div className="relative w-16 h-20 bg-muted/20 flex-shrink-0 overflow-hidden">
+                      <Image
                         src={product.images[0]?.src}
                         alt={product.images[0]?.alt}
+                        fill
+                        sizes="64px"
                         className="w-full h-full object-cover"
                       />
                     </div>

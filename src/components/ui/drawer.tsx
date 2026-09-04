@@ -23,18 +23,47 @@ export function Drawer({
   className,
 }: DrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
+  const previouslyFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== "Tab" || !drawerRef.current) return;
+      const focusable = drawerRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     if (isOpen) {
+      previouslyFocused.current =
+        document.activeElement as HTMLElement | null;
       document.addEventListener("keydown", handleEscape);
+      document.addEventListener("keydown", handleTab);
       document.body.style.overflow = "hidden";
+      const focusTarget =
+        drawerRef.current?.querySelector<HTMLElement>('[aria-label="Close"]') ||
+        drawerRef.current;
+      focusTarget?.focus();
     }
     return () => {
       document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleTab);
       document.body.style.overflow = "";
+      previouslyFocused.current?.focus?.();
+      previouslyFocused.current = null;
     };
   }, [isOpen, onClose]);
 

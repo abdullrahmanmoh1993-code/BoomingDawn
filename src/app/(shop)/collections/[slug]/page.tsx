@@ -1,6 +1,12 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getCollectionBySlug, getProductsByCollection } from "@/lib/data";
+import { siteConfig } from "@/lib/constants";
 import { ProductGrid } from "@/components/product/product-grid";
+
+function abs(url: string) {
+  return `${siteConfig.url}${url}`;
+}
 
 export async function generateMetadata({
   params,
@@ -9,9 +15,25 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const collection = getCollectionBySlug(slug);
+
+  if (!collection) {
+    return { title: "Collection" };
+  }
+
   return {
-    title: collection?.name || "Collection",
-    description: collection?.description?.slice(0, 155),
+    title: collection.name,
+    description: collection.description?.slice(0, 155),
+    alternates: {
+      canonical: `/collections/${collection.slug}`,
+    },
+    openGraph: {
+      type: "website",
+      title: collection.name,
+      description: collection.description?.slice(0, 155),
+      images: collection.image
+        ? [{ url: abs(collection.image.src), alt: collection.image.alt }]
+        : undefined,
+    },
   };
 }
 
@@ -33,9 +55,11 @@ export default async function CollectionPage({
     <div className="pt-16 lg:pt-20">
       {/* Collection Hero */}
       <section className="relative py-24 lg:py-32 border-b border-border overflow-hidden">
-        <img
+        <Image
           src={collection.image.src}
           alt={collection.image.alt}
+          fill
+          sizes="100vw"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />

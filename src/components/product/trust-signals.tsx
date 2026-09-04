@@ -1,21 +1,25 @@
 import { Truck, RotateCcw, ShieldCheck } from "lucide-react";
+import { FREE_DELIVERY_THRESHOLD } from "@/lib/data/checkout";
+import { formatPrice } from "@/lib/utils";
 
 export function TrustSignals() {
   const signals = [
     {
       icon: Truck,
-      title: "Free Shipping",
-      subtitle: "Complimentary on all orders over $150.",
+      title: "Free Delivery",
+      subtitle: `Complimentary on all orders over ${formatPrice(
+        FREE_DELIVERY_THRESHOLD
+      )}.`,
     },
     {
       icon: RotateCcw,
-      title: "Easy Returns",
-      subtitle: "30-day hassle-free returns on unworn items.",
+      title: "Easy Exchanges",
+      subtitle: "Flexible size exchanges on unworn items — get in touch.",
     },
     {
       icon: ShieldCheck,
       title: "Secure Checkout",
-      subtitle: "All transactions encrypted and secure.",
+      subtitle: "Pay on delivery or securely via InstaPay. No hidden fees.",
     },
   ];
 

@@ -1,16 +1,18 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="video-hero relative w-full h-screen flex items-center justify-center overflow-hidden bg-foreground">
       {/* Full-screen background video with poster fallback */}
       <video
         className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
+        autoPlay={!prefersReducedMotion}
         muted
         loop
         playsInline
@@ -29,7 +31,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-booming-red font-display text-4xl sm:text-6xl lg:text-7xl font-medium leading-tight tracking-tight"
         >
-          A New Dawn ,
+          A New Dawn,
           <br />
           A New Beginning
         </motion.h1>

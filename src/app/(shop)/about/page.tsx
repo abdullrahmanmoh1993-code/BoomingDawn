@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function AboutPage() {
@@ -7,9 +8,11 @@ export default function AboutPage() {
     <div className="pt-16 lg:pt-20">
       {/* Hero */}
       <section className="relative py-24 lg:py-32 border-b border-border overflow-hidden">
-        <img
+        <Image
           src="/images/editorial/dawn-sky-horizon.jpg"
           alt=""
+          fill
+          sizes="100vw"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />

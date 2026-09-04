@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { products } from "@/lib/data";
 import { ProductGrid } from "@/components/product/product-grid";
 
@@ -12,9 +13,11 @@ export default function ProductsPage() {
     <div className="pt-16 lg:pt-20">
       {/* Header image */}
       <section className="relative py-24 lg:py-32 border-b border-border overflow-hidden">
-        <img
+        <Image
           src="/images/editorial/pre-dawn-sky-panorama.jpg"
           alt=""
+          fill
+          sizes="100vw"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />

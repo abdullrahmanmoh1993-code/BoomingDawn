@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import type { Product } from "@/lib/types";
@@ -27,15 +28,19 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       <Link href={`/products/${product.slug}`} className="block">
         <div className="relative aspect-[4/5] overflow-hidden bg-muted/10">
-          <motion.img
+          <Image
             src={product.images[0]?.src}
             alt={product.images[0]?.alt}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
           {product.images[1] && (
-            <img
+            <Image
               src={product.images[1].src}
               alt={product.images[1].alt}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
           )}

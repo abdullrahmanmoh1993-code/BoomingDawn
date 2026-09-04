@@ -1,5 +1,6 @@
 import { Inter, Anton, Cairo } from "next/font/google";
 import type { Metadata } from "next";
+import { siteConfig } from "@/lib/constants";
 import "./globals.css";
 
 const anton = Anton({
@@ -22,13 +23,13 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://theboomingdawn.com"),
+  metadataBase: new URL(siteConfig.url),
   title: {
     default: "The Booming Dawn | الفجر الصاخب",
     template: "%s | The Booming Dawn",
   },
   description:
-    "Wear your attitude on your chest. Streetwear for the fearless, soft cotton, loud graphics.",
+    siteConfig.description,
   keywords: [
     "streetwear",
     "egypt",
@@ -37,14 +38,45 @@ export const metadata: Metadata = {
     "statement tee",
     "t-shirt",
   ],
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "en_US",
     siteName: "The Booming Dawn",
+    title: "The Booming Dawn | الفجر الصاخب",
+    description: siteConfig.description,
+    url: siteConfig.url,
+    images: [
+      {
+        url: "/images/brand/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "The Booming Dawn | الفجر الصاخب",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
+    title: "The Booming Dawn | الفجر الصاخب",
+    description: siteConfig.description,
+    images: ["/images/brand/og-image.png"],
   },
+};
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "The Booming Dawn",
+  slogan: siteConfig.tagline,
+  description: siteConfig.description,
+  url: siteConfig.url,
+  logo: `${siteConfig.url}/images/brand/logo.png`,
+  sameAs: [
+    "https://www.instagram.com/theboomingdawn",
+    "https://www.tiktok.com/@theboomingdawn",
+  ],
 };
 
 export default function RootLayout({
@@ -62,6 +94,12 @@ export default function RootLayout({
       <body
         className={`${anton.variable} ${inter.variable} ${cairo.variable} font-body bg-background text-foreground antialiased min-h-screen flex flex-col`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {children}
       </body>
     </html>

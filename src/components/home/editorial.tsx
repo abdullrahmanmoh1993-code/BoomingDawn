@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export function Editorial() {
@@ -15,19 +16,22 @@ export function Editorial() {
           transition={{ duration: 0.7 }}
           className="relative overflow-hidden"
         >
-          <div className="aspect-[4/5]">
-            <img
+          <div className="relative aspect-[4/5]">
+            <Image
               src="/images/editorial/warehouse.jpg"
               alt="The Booming Dawn editorial campaign"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="w-full h-full object-cover"
             />
           </div>
           <div className="absolute -right-6 -bottom-6 w-48 lg:w-64 overflow-hidden hidden sm:block">
-            <div className="aspect-square">
-              <img
+            <div className="relative aspect-square">
+              <Image
                 src="/images/editorial/brutalist.jpg"
                 alt=""
-
+                fill
+                sizes="256px"
                 className="w-full h-full object-cover"
               />
             </div>

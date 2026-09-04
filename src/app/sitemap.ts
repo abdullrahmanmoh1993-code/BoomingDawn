@@ -52,5 +52,11 @@ export default function sitemap() {
       changeFrequency: "monthly" as const,
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/shipping`,
+      lastModified: now.toISOString(),
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    },
   ];
 }

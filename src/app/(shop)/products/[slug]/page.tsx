@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import { getProductBySlug } from "@/lib/data";
+import { siteConfig } from "@/lib/constants";
 import { ProductDetailView } from "@/components/product/product-detail-view";
+
+function abs(url: string) {
+  return `${siteConfig.url}${url}`;
+}
 
 export async function generateMetadata({
   params,
@@ -9,9 +14,33 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
+
+  if (!product) {
+    return { title: "Product" };
+  }
+
+  const firstImage = product.images?.[0];
+
   return {
-    title: product?.name || "Product",
-    description: product?.description?.slice(0, 155) || "Premium fashion from The Booming Dawn.",
+    title: product.name,
+    description: product.description?.slice(0, 155),
+    alternates: {
+      canonical: `/products/${product.slug}`,
+    },
+    openGraph: {
+      type: "product",
+      title: product.name,
+      description: product.description?.slice(0, 155),
+      images: firstImage
+        ? [{ url: abs(firstImage.src), alt: firstImage.alt || product.name }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description?.slice(0, 155),
+      images: firstImage ? [abs(firstImage.src)] : undefined,
+    },
   };
 }
 
@@ -27,5 +56,64 @@ export default async function ProductDetailPage({
     notFound();
   }
 
-  return <ProductDetailView product={product} />;
+  const firstImage = product.images?.[0];
+  const anyInStock = product.variants.some((v) => v.inStock);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: firstImage ? abs(firstImage.src) : undefined,
+    brand: {
+      "@type": "Brand",
+      name: "The Booming Dawn",
+    },
+    offers: {
+      "@type": "Offer",
+      url: abs(`/products/${product.slug}`),
+      priceCurrency: product.currency,
+      price: product.price,
+      availability: anyInStock
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+    },
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Shop",
+        item: abs("/products"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: product.name,
+        item: abs(`/products/${product.slug}`),
+      },
+    ],
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <ProductDetailView product={product} />
+    </>
+  );
 }

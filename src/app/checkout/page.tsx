@@ -42,7 +42,6 @@ import {
   buildOrderLineItems,
   computeTotals,
   estimatedDeliveryFor,
-  computeDeliveryFee,
 } from "@/lib/checkout/orders";
 import {
   isEgyptianMobile,
@@ -111,10 +110,6 @@ export default function CheckoutPage() {
   const resolvedLines = useMemo(() => buildOrderLineItems(lineItems), [lineItems]);
 
   const deliveryOption = DELIVERY_OPTIONS.find((d) => d.id === deliveryId);
-  const deliveryFee = computeDeliveryFee(
-    addr.governorate,
-    resolvedLines.reduce((s, l) => s + l.unitPrice * l.quantity, 0)
-  );
 
   const totals = useMemo(() => {
     return computeTotals(
@@ -860,8 +855,8 @@ function TermsSection({
         error={!!errors.terms}
         label={
           <>
-            I agree to the <Link href="/">Terms &amp; Conditions</Link> and{" "}
-            <Link href="/">Privacy Policy</Link>.
+            I agree to the <Link href="/terms">Terms &amp; Conditions</Link> and{" "}
+            <Link href="/privacy">Privacy Policy</Link>.
           </>
         }
       />

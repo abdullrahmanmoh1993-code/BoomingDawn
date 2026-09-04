@@ -1,20 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useCartStore } from "@/stores/cart-store";
 import { products } from "@/lib/data";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { FREE_DELIVERY_THRESHOLD } from "@/lib/data/checkout";
 
 export default function CartPage() {
   const items = useCartStore((s) => s.items);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
-  const [promo, setPromo] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
 
   const getProduct = (id: string) => products.find((p) => p.id === id);
   const getVariant = (productId: string, variantId: string) =>
@@ -25,8 +23,7 @@ export default function CartPage() {
     return sum + (product?.price ?? 0) * item.quantity;
   }, 0);
 
-  const shipping = subtotal >= 150 ? 0 : 12;
-  const total = subtotal + shipping - (promoApplied ? subtotal * 0.1 : 0);
+  const qualifiesForFreeDelivery = subtotal >= FREE_DELIVERY_THRESHOLD;
 
   if (items.length === 0) {
     return (
@@ -68,11 +65,13 @@ export default function CartPage() {
                 >
                   <Link
                     href={`/products/${product.slug}`}
-                    className="shrink-0 w-24 h-32 bg-muted/10 overflow-hidden"
+                    className="relative shrink-0 w-24 h-32 bg-muted/10 overflow-hidden"
                   >
-                    <img
+                    <Image
                       src={product.images[0]?.src}
                       alt={product.images[0]?.alt}
+                      fill
+                      sizes="96px"
                       className="w-full h-full object-cover"
                     />
                   </Link>
@@ -156,42 +155,20 @@ export default function CartPage() {
                   <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted">Shipping</span>
-                  <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
+                  <span className="text-muted">Delivery</span>
+                  <span className="text-muted">Calculated at checkout</span>
                 </div>
-                {promoApplied && (
-                  <div className="flex justify-between text-accent">
-                    <span>Promo (DAWN10)</span>
-                    <span>-{formatPrice(subtotal * 0.1)}</span>
-                  </div>
+                <div className="flex justify-between border-t border-border pt-3">
+                  <span className="font-display text-base">Total</span>
+                  <span className="font-display text-base">
+                    {formatPrice(subtotal)}
+                  </span>
+                </div>
+                {qualifiesForFreeDelivery && (
+                  <p className="text-xs text-accent">
+                    Your subtotal qualifies for free delivery.
+                  </p>
                 )}
-              </div>
-
-              {/* Promo code */}
-              <div className="mt-6 mb-6">
-                <Input
-                  placeholder="Promo code (try DAWN10)"
-                  value={promo}
-                  onChange={(e) => setPromo(e.target.value)}
-                  disabled={promoApplied}
-                />
-                {!promoApplied && promo.toUpperCase() === "DAWN10" && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-2 w-full"
-                    onClick={() => setPromoApplied(true)}
-                  >
-                    Apply
-                  </Button>
-                )}
-              </div>
-
-              <div className="border-t border-border pt-4 mt-4 flex justify-between items-center">
-                <span className="font-display text-lg">Total</span>
-                <span className="font-display text-lg">
-                  {formatPrice(total)}
-                </span>
               </div>
 
               <Link href="/checkout" className="block w-full">
@@ -200,7 +177,8 @@ export default function CartPage() {
                 </Button>
               </Link>
               <p className="text-xs text-muted text-center mt-3">
-                Cash on Delivery and InstaPay available at checkout.
+                Delivery fee and any promo code are applied at checkout. Cash on
+                Delivery and InstaPay available.
               </p>
 
               <Link
