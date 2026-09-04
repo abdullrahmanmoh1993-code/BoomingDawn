@@ -49,8 +49,9 @@ test.describe("horizontal overflow", () => {
           return {
             scrollWidth: se.scrollWidth,
             clientWidth: se.clientWidth,
-            // html/body overflow-x clip is intentional containment for
-            // slide-in motion; scrollability is what we must never see.
+            // Global overflow-x clipping is intentionally NOT used (any real
+            // overflow must surface here rather than being masked); the only
+            // local containment is the editorial slide-in section itself.
             htmlOverflowX: getComputedStyle(document.documentElement).overflowX,
             hasOverflow: se.scrollWidth > se.clientWidth + 1,
           };
@@ -143,17 +144,17 @@ test.describe("header mobile layout", () => {
 });
 
 test.describe("safe-area padding renders (calc guards)", () => {
+  const headerRow = (page: Page) =>
+    page.locator("header div.flex.items-center.justify-between").first();
+
   test("header horizontal padding resolves at mobile width", async ({ page }) => {
     await setViewport(page, { width: 320, height: 568 });
     await page.goto("/");
-    const pad = await page
-      .locator("header .px-page")
-      .first()
-      .evaluate((el) => ({
-        left: parseFloat(getComputedStyle(el).paddingLeft),
-        right: parseFloat(getComputedStyle(el).paddingRight),
-      }));
-    // px-page base = max(1rem, calc(env + 1rem)); env()=0 headless => 16px.
+    const pad = await headerRow(page).evaluate((el) => ({
+      left: parseFloat(getComputedStyle(el).paddingLeft),
+      right: parseFloat(getComputedStyle(el).paddingRight),
+    }));
+    // max(1rem, env(inset)) — env()=0 headless => 16px(1rem), never less.
     expect(pad.left, `header paddingLeft was ${pad.left}px`).toBeGreaterThanOrEqual(15);
     expect(pad.right, `header paddingRight was ${pad.right}px`).toBeGreaterThanOrEqual(15);
   });
@@ -163,13 +164,10 @@ test.describe("safe-area padding renders (calc guards)", () => {
   }) => {
     await setViewport(page, { width: 844, height: 390 });
     await page.goto("/");
-    const pad = await page
-      .locator("header .px-page")
-      .first()
-      .evaluate((el) => ({
-        left: parseFloat(getComputedStyle(el).paddingLeft),
-        right: parseFloat(getComputedStyle(el).paddingRight),
-      }));
+    const pad = await headerRow(page).evaluate((el) => ({
+      left: parseFloat(getComputedStyle(el).paddingLeft),
+      right: parseFloat(getComputedStyle(el).paddingRight),
+    }));
     // sm breakpoint = 1.5rem = 24px
     expect(pad.left).toBeGreaterThanOrEqual(23);
     expect(pad.right).toBeGreaterThanOrEqual(23);
@@ -222,7 +220,7 @@ test.describe("safe-area padding renders (calc guards)", () => {
   });
 });
 
-test.describe("sticky behavior survives overflow-x clip", () => {
+test.describe("sticky behavior (no overflow containment needed)", () => {
   test("dawn-stages sticky column still sticks to viewport top", async ({
     page,
   }) => {
@@ -293,4 +291,94 @@ test.describe("logo first-paint (no flash)", () => {
     expect(Number(attrs.height)).toBeLessThanOrEqual(48);
     expect(attrs.height).not.toBe("200");
   });
+});
+
+test.describe("mobile header icons never overflow (320/375/414)", () => {
+  const ICON_VPS = [
+    { width: 320, height: 568 },
+    { width: 375, height: 667 },
+    { width: 414, height: 896 },
+  ];
+
+  for (const vp of ICON_VPS) {
+    test(`${vp.width}px: actions cluster + cart badge stay inside viewport, row fits its own box`, async ({
+      page,
+    }) => {
+      // Seed the persisted cart store BEFORE hydration so the badge renders.
+      await page.addInitScript(() => {
+        localStorage.setItem(
+          "tbd-cart",
+          JSON.stringify({
+            state: {
+              items: [
+                {
+                  productId: "nautical-tee",
+                  variantId: "nautical-tee-black-m",
+                  quantity: 1,
+                },
+              ],
+              isOpen: false,
+            },
+            version: 0,
+          })
+        );
+      });
+
+      await setViewport(page, vp);
+      await page.goto("/");
+
+      const header = page.locator("header");
+      const row = header.locator("div.flex.items-center.justify-between").first();
+      const search = page.getByRole("button", { name: "Search" });
+      const wishlist = page.locator('header a[href="/wishlist"]');
+      const cart = page.getByRole("button", { name: /Shopping bag/i });
+      const badge = page.locator('header button[aria-label^="Shopping bag"] span');
+
+      // The badge must actually render (the whole point of the regression).
+      await expect(badge).toBeVisible();
+      await expect(search).toBeVisible();
+
+      // #1: header row has explicit 1rem safe-area padding (never < 16px).
+      const pads = await row.evaluate((el) => {
+        const s = getComputedStyle(el);
+        return {
+          paddingLeft: parseFloat(s.paddingLeft),
+          paddingRight: parseFloat(s.paddingRight),
+        };
+      });
+      expect(pads.paddingLeft, "row left padding must be >= 16px").toBeGreaterThanOrEqual(15.9);
+      expect(pads.paddingRight, "row right padding must be >= 16px").toBeGreaterThanOrEqual(15.9);
+
+      // #4: the row itself must never overflow its box (icons cannot spill out).
+      const metrics = await row.evaluate((el) => ({
+        scrollWidth: el.scrollWidth,
+        clientWidth: el.clientWidth,
+        overflowX: getComputedStyle(el).overflowX,
+      }));
+      expect(
+        metrics.scrollWidth,
+        `header row overflows its own box: scrollWidth ${metrics.scrollWidth} > clientWidth ${metrics.clientWidth}`
+      ).toBeLessThanOrEqual(metrics.clientWidth);
+      expect(metrics.overflowX, "header row must not clip its own children").not.toMatch(/hidden|clip/i);
+
+      // #2/#3: every control AND the absolutely-offset badge fits the viewport.
+      const controls = [search, wishlist, cart, badge];
+      for (const c of controls) {
+        await expect(c).toBeVisible();
+        const box = (await c.boundingBox())!;
+        expect(box.x, `${vp.width}px: left edge of control is cut off`).toBeGreaterThanOrEqual(0);
+        expect(
+          box.x + box.width,
+          `${vp.width}px: right edge of control is cut off by the screen/notch edge`
+        ).toBeLessThanOrEqual(vp.width);
+        expect(box.y + box.height, `${vp.width}px: control clipped above`).toBeGreaterThan(0);
+      }
+
+      // Header/ancestors must never reintroduce overflow clipping as a mask.
+      const headerOverflow = await header.evaluate(
+        (el) => `${getComputedStyle(el).overflowX} ${getComputedStyle(el).overflowY}`
+      );
+      expect(headerOverflow).not.toMatch(/hidden|clip/i);
+    });
+  }
 });

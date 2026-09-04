@@ -41,20 +41,16 @@ html {
   scroll-behavior: smooth;
   color-scheme: dark;
   background: var(--background);
-  /* Frame the experience inside the device screen:
-     - `clip` (not `hidden`) clips overflow without creating a scroll
-       container, so position:sticky (dawn-stages) keeps working.
-     - Decorative slide-in motion offsets (framer-motion x:±30) are meant to
-       arrive from off-screen; clipping them is the intended design behavior,
-       not a mask for a layout bug. */
-  overflow-x: clip;
+  /* No overflow containers on html/body: global clipping here would mask
+     real layout overflows (they are contained locally, e.g. the editorial
+     slide-in section). Honors the audit rule: never let a global overflow rule
+     hide a real bug. */
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), system-ui, sans-serif;
-  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
   /* Subtle, premium page fade-in on full page loads.
      Uses `backwards` so the first painted frame is already at opacity 0

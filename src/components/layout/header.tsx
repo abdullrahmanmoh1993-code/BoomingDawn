@@ -60,14 +60,17 @@ export function Header() {
             : "bg-transparent"
         )}
       >
-        <div className="max-w-[1440px] mx-auto px-page">
-          <div className="flex items-center justify-between min-h-[64px] lg:h-[64px] pt-[env(safe-area-inset-top,0px)] overflow-visible">
+        <div className="max-w-[1440px] mx-auto px-0">
+          <div
+            className="relative flex w-full items-center justify-between overflow-visible py-3 pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))] sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] lg:py-0 lg:pl-[max(2rem,env(safe-area-inset-left,0px))] lg:pr-[max(2rem,env(safe-area-inset-right,0px))]"
+            style={{ minHeight: "calc(env(safe-area-inset-top, 0px) + 64px)" }}
+          >
             {/* Left cluster: hamburger + logo on mobile, centered logo on desktop */}
-            <div className="flex items-center gap-2 lg:absolute lg:left-1/2 lg:top-0 lg:-translate-x-1/2 lg:h-full lg:gap-0">
+            <div className="flex items-center gap-2 min-w-0 lg:absolute lg:left-1/2 lg:top-0 lg:-translate-x-1/2 lg:h-full lg:gap-0">
               {/* Mobile menu button */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2 -ml-2 min-w-11 min-h-11 flex items-center justify-center"
+                className="lg:hidden p-2 min-w-11 min-h-11 flex items-center justify-center"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
               >
                 {mobileOpen ? <X size={22} /> : <Menu size={22} />}
@@ -76,7 +79,7 @@ export function Header() {
               {/* Logo */}
               <Link
                 href="/"
-                className="flex items-center"
+                className="flex items-center shrink-0"
                 aria-label="The Booming Dawn - home"
               >
                 <Logo
@@ -101,7 +104,7 @@ export function Header() {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-1 lg:gap-2">
+            <div className="flex items-center gap-4 shrink-0 overflow-visible lg:gap-2">
               <button
                 onClick={() => setSearchOpen(true)}
                 className="p-2 min-w-11 min-h-11 flex items-center justify-center hover:bg-foreground/5 transition-colors rounded-full"
@@ -117,7 +120,7 @@ export function Header() {
               >
                 <Heart size={18} />
                 {badgeWishlist > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                  <span className="absolute -top-2 -right-2 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                     {badgeWishlist}
                   </span>
                 )}
@@ -129,7 +132,7 @@ export function Header() {
               >
                 <ShoppingBag size={18} />
                 {badgeCart > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
+                  <span className="absolute -top-2 -right-2 z-10 w-4 h-4 bg-accent text-white text-[10px] font-medium flex items-center justify-center rounded-full">
                     {badgeCart}
                   </span>
                 )}

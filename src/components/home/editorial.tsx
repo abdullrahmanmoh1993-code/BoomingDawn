@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export function Editorial() {
   return (
-    <section className="py-20 lg:py-28">
+    <section className="py-20 lg:py-28 overflow-x-clip">
       <div className="max-w-[1440px] mx-auto px-page grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* Image */}
         <motion.div
