@@ -35,6 +35,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               src={image.src}
               alt={image.alt}
               fill
+              quality={90}
               sizes="80px"
               className="w-full h-full object-cover"
             />
@@ -62,6 +63,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
               src={images[activeIndex]?.src}
               alt={images[activeIndex]?.alt}
               fill
+              quality={100}
               sizes="(max-width: 768px) 100vw, 60vw"
               className={cn(
                 "w-full h-full object-cover transition-transform duration-500",

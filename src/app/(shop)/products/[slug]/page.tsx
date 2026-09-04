@@ -28,7 +28,7 @@ export async function generateMetadata({
       canonical: `/products/${product.slug}`,
     },
     openGraph: {
-      type: "product",
+      type: "website",
       title: product.name,
       description: product.description?.slice(0, 155),
       images: firstImage

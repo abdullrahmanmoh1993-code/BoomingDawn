@@ -32,6 +32,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             src={product.images[0]?.src}
             alt={product.images[0]?.alt}
             fill
+            quality={90}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -40,6 +41,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               src={product.images[1].src}
               alt={product.images[1].alt}
               fill
+              quality={90}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
               className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
