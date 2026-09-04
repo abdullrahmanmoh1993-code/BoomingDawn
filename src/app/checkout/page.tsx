@@ -361,7 +361,7 @@ export default function CheckoutPage() {
       </form>
 
       {/* Mobile: full-width sticky Place Order bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border p-4 pb-[calc(1rem_+_env(safe-area-inset-bottom,0px))]">
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-muted mb-1">

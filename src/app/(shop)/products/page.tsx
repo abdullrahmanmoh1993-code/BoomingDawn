@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function ProductsPage() {
   return (
-    <div className="pt-16 lg:pt-20">
+    <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       {/* Header image */}
       <section className="relative py-24 lg:py-32 border-b border-border overflow-hidden">
         <Image

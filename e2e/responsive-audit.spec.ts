@@ -140,6 +140,92 @@ test.describe("header mobile layout", () => {
   });
 });
 
+test.describe("safe-area padding renders (calc guards)", () => {
+  test("mobile menu panel gets safe-area-aware top padding", async ({ page }) => {
+    await setViewport(page, { width: 390, height: 844 });
+    await page.goto("/");
+    await page.getByRole("button", { name: /Open menu/i }).click();
+    const panel = page.getByRole("navigation", { name: "Mobile navigation" });
+    await expect(panel).toBeVisible();
+    const pt = await panel.evaluate((el) =>
+      parseFloat(getComputedStyle(el).paddingTop)
+    );
+    // In headless env() = 0, so padding must still resolve to 5rem = 80px.
+    expect(pt, `menu panel paddingTop was ${pt}px`).toBeGreaterThanOrEqual(79);
+  });
+
+  test("checkout mobile place-order bar clears the home indicator", async ({
+    page,
+  }) => {
+    await setViewport(page, { width: 390, height: 844 });
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "tbd-cart",
+        JSON.stringify({
+          state: {
+            items: [
+              { productId: "the-nautical-tee", variantId: "nautical-tee-black-m", quantity: 1 },
+            ],
+          },
+          version: 0,
+        })
+      );
+    });
+    await page.goto("/checkout");
+    const bar = page
+      .locator("div.fixed.bottom-0")
+      .filter({
+        has: page.getByRole("button", { name: /Place order|Pay|Order/i }),
+      })
+      .first();
+    const pb = await bar.evaluate((el) =>
+      parseFloat(getComputedStyle(el).paddingBottom)
+    );
+    // calc(1rem + env(…)) with env() = 0 must resolve to 16px (1rem).
+    expect(pb, `place-order bar paddingBottom was ${pb}px`).toBeGreaterThanOrEqual(
+      15
+    );
+  });
+});
+
+test.describe("sticky behavior survives overflow-x clip", () => {
+  test("dawn-stages sticky column still sticks to viewport top", async ({
+    page,
+  }) => {
+    await setViewport(page, { width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "load" });
+    await page.waitForTimeout(600);
+
+    const track = await page.evaluate(() => {
+      const sticky = [...document.querySelectorAll("*")].find((el) => {
+        const s = getComputedStyle(el);
+        return s.position === "sticky" && el.getBoundingClientRect().height > 200;
+      });
+      if (!sticky) return null;
+      const before = sticky.getBoundingClientRect().top;
+      window.scrollTo(0, 1400);
+      return { before, id: sticky.id || sticky.className, elTag: sticky.tagName };
+    });
+
+    expect(track, "expected a sticky dawn-stage element to exist").not.toBeNull();
+
+    await page.waitForTimeout(400);
+    const after = await page.evaluate(() => {
+      const sticky = [...document.querySelectorAll("*")].find((el) => {
+        const s = getComputedStyle(el);
+        return s.position === "sticky" && el.getBoundingClientRect().height > 200;
+      });
+      return sticky ? sticky.getBoundingClientRect().top : null;
+    });
+
+    // Stuck at the top once its parent scrolls it up.
+    expect(track!.before).toBeGreaterThan(200);
+    expect(after!, "sticky element did not stick to the viewport top").toBeLessThan(
+      5
+    );
+  });
+});
+
 test.describe("logo first-paint (no flash)", () => {
   test("SSR markup carries small intrinsic dimensions, not 200x200", async ({
     page,

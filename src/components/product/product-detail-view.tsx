@@ -50,7 +50,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
   };
 
   return (
-    <div className="relative pt-16 lg:pt-20">
+    <div className="relative pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       {/* Dawn stage atmosphere */}
       <DawnBackground stage={product.dawnStage} />
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
