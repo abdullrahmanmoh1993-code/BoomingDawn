@@ -8,14 +8,18 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.BASE_URL ?? "http://localhost:3000",
     trace: "on-first-retry",
   },
   projects: [
     {
-      name: "mobile",
+      name: "mobile-chromium",
       use: { ...devices["iPhone 13"], browserName: "chromium" },
       testMatch: /header\.spec\.ts/,
+    },
+    {
+      name: "mobile-safari",
+      use: { ...devices["iPhone 13"], browserName: "webkit" },
     },
     {
       name: "desktop-chromium",
