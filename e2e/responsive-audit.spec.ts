@@ -293,10 +293,11 @@ test.describe("logo first-paint (no flash)", () => {
   });
 });
 
-test.describe("mobile header icons never overflow (320/375/414)", () => {
+test.describe("mobile header icons never overflow (320/375/380/414)", () => {
   const ICON_VPS = [
     { width: 320, height: 568 },
     { width: 375, height: 667 },
+    { width: 380, height: 840 }, // phone-mockup screen width
     { width: 414, height: 896 },
   ];
 
@@ -381,4 +382,85 @@ test.describe("mobile header icons never overflow (320/375/414)", () => {
       expect(headerOverflow).not.toMatch(/hidden|clip/i);
     });
   }
+});
+
+test.describe("phone mockup: badges never clipped by the screen corner", () => {
+  test("cart + wishlist badges render fully inside the rounded phone screen", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/phone-mockup.html", { waitUntil: "load" });
+
+    // The mockup auto-seeds the cart + wishlist stores on load.
+    const frame = page.frameLocator("#frame");
+    const cartBadge = frame.locator('header button[aria-label^="Shopping bag"] span');
+    const wishBadge = frame.locator('header a[href="/wishlist"] span');
+    await expect(cartBadge).toBeVisible();
+    await expect(wishBadge).toBeVisible();
+
+    // Model the phone screen exactly as phone-mockup.html does: the screen box
+    // (.screen) is 48px-corner rounded with overflow:hidden and the iframe is
+    // inset 47px from its top. Work in iframe-internal CSS coordinates: the
+    // screen box spans y:[-47, iframeHeight], x:[0, iframeWidth]. A badge is
+    // "out of frame" only if any of its 4 corners falls inside the corner mask
+    // or outside the screen box.
+    const result = await page.evaluate(() => {
+      const f = document.getElementById("frame") as HTMLIFrameElement;
+      const dw = f.contentWindow!.document;
+      const W = dw.documentElement.clientWidth;
+      const H = dw.documentElement.clientHeight;
+      const TOP_INSET = 47; // .screen iframe { margin-top: 47px }
+      const R = 48; // .screen { border-radius: 48px }
+      // Screen box in iframe-internal coords:
+      const box = { left: 0, top: -TOP_INSET, right: W, bottom: H };
+      const insideRoundedRect = (x: number, y: number) => {
+        const cx = Math.min(Math.max(x, box.left + R), box.right - R);
+        const cy = Math.min(Math.max(y, box.top + R), box.bottom - R);
+        const dx = x - cx;
+        const dy = y - cy;
+        return dx * dx + dy * dy <= R * R;
+      };
+      const screenFits = (el: Element) => {
+        const b = el.getBoundingClientRect();
+        const corners: Array<[number, number]> = [
+          [b.left, b.top],
+          [b.right, b.top],
+          [b.left, b.bottom],
+          [b.right, b.bottom],
+        ];
+        const inBounds = corners.every(
+          ([x, y]) =>
+            x >= box.left && y >= box.top && x <= box.right && y <= box.bottom
+        );
+        const inCorners = corners.every(([x, y]) => insideRoundedRect(x, y));
+        return {
+          box: {
+            left: b.left,
+            top: b.top,
+            right: b.right,
+            bottom: b.bottom,
+            width: b.width,
+            height: b.height,
+          },
+          inBounds,
+          inCorners,
+        };
+      };
+      const q = (sel: string) => dw.querySelector(sel)!;
+      return {
+        screen: { width: W, height: H },
+        cart: screenFits(q('header button[aria-label^="Shopping bag"] span')),
+        wishlist: screenFits(q('header a[href="/wishlist"] span')),
+      };
+    });
+
+    expect(
+      result.cart.inBounds && result.cart.inCorners,
+      `cart badge clipped by phone screen: ${JSON.stringify(result.cart)}`
+    ).toBe(true);
+    expect(
+      result.wishlist.inBounds && result.wishlist.inCorners,
+      `wishlist badge clipped by phone screen: ${JSON.stringify(result.wishlist)}`
+    ).toBe(true);
+  });
 });
