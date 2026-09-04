@@ -36,7 +36,12 @@ export function Hero() {
   }, [videoSrc, prefersReducedMotion]);
 
   return (
-    <section className="video-hero relative w-full flex items-center justify-center overflow-hidden bg-foreground">
+    <section className="video-hero relative w-full flex items-center justify-center overflow-hidden bg-background">
+      {/* CSS-only dawn surface: the site's real first-paint background. Painted
+          from markup with zero network/hydration dependency so the header never
+          floats over a blank surface while the video is still loading. The
+          <video>'s poster and frames cover it once they arrive. */}
+      <div className="dawn-surface absolute inset-0" aria-hidden="true" />
       {/* Full-screen background video with poster fallback */}
       <video
         ref={videoRef}
@@ -53,7 +58,7 @@ export function Hero() {
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-3xl mx-auto pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.5rem))]">
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-booming-red font-display text-4xl sm:text-6xl lg:text-7xl font-medium leading-tight tracking-tight"
@@ -64,7 +69,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
@@ -80,8 +85,8 @@ export function Hero() {
 
       {/* Scroll indicator */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ y: -10 }}
+        animate={{ y: 0 }}
         transition={{ delay: 1.5 }}
         className="absolute bottom-[max(2rem,calc(env(safe-area-inset-bottom,0px)_+_1rem))] left-1/2 -translate-x-1/2"
       >

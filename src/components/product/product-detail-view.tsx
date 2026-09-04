@@ -79,7 +79,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
             <div>
               {/* Dawn stage accent */}
               <motion.p
-                initial={{ opacity: 0, y: -8 }}
+                initial={{ y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.15 }}
                 className="text-booming-orange text-xs uppercase tracking-[0.3em] mb-3"

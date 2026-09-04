@@ -138,6 +138,20 @@ body {
   height: 100dvh;
 }
 
+/*
+   The hero's first-paint background: a dusk gradient built purely from CSS so
+   the very first painted frame already reads as the site's dawn identity
+   (deep dusk blue + a faint red/orange horizon glow), instead of a blank
+   surface behind the fixed header. It sits under the <video> (poster + frames)
+   and is covered as soon as media paints. No animation, no opacity masking.
+*/
+.dawn-surface {
+  background:
+    radial-gradient(ellipse 120% 70% at 50% 108%, rgba(187, 35, 41, 0.22), transparent 62%),
+    radial-gradient(ellipse 90% 50% at 50% 118%, rgba(239, 131, 60, 0.12), transparent 55%),
+    #0a0f1a;
+}
+
 .dawn-stages {
   height: 300vh;
   height: 300dvh;
