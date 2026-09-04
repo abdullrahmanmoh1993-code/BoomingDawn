@@ -84,15 +84,13 @@ export function Header() {
               ))}
             </nav>
 
-            {/* Logo */}
+            {/* Logo - centered */}
             <Link
               href="/"
-              className="absolute left-[40%] -translate-x-1/2 flex items-center lg:static lg:translate-x-0 gap-2"
+              className="absolute left-1/2 -translate-x-1/2 flex items-center"
+              aria-label="The Booming Dawn - home"
             >
               <Logo className="shrink-0 h-12 lg:h-14 w-auto" />
-              <span className="font-display text-booming-red text-xl lg:text-2xl tracking-tight whitespace-nowrap">
-                {siteConfig.name}
-              </span>
             </Link>
 
             {/* Actions */}
