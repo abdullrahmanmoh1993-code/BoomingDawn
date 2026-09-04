@@ -175,8 +175,8 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
                   />
                 </Button>
               </div>
-              <Button variant="ghost" className="w-full" size="lg">
-                <Link href="/cart">Buy Now</Link>
+              <Button variant="ghost" className="w-full" size="lg" href="/cart">
+                Buy Now
               </Button>
             </div>
 

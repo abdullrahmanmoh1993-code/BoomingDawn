@@ -131,7 +131,7 @@ export default function ContactPage() {
                 Customer Care
               </h3>
               <p className="text-muted text-sm leading-relaxed">
-                Our team is available Monday–Friday, 9am–6pm EST.
+                Our team is available Monday–Friday, 9am–6pm Cairo time (EET).
                 <br />
                 support@theboomingdawn.com
               </p>

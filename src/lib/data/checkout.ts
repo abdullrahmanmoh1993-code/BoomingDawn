@@ -183,6 +183,16 @@ export function isInstaPayConfigured(): boolean {
   return INSTAPAY_PHONE_NUMBER.trim().length > 0;
 }
 
+/** Whether the store WhatsApp number is configured (order help + payment screenshots). */
+export function isWhatsAppConfigured(): boolean {
+  return STORE_WHATSAPP_NUMBER.trim().length > 0;
+}
+
+/** Display version of the store WhatsApp number (digits only, no formatting yet). */
+export function displayWhatsAppNumber(): string {
+  return STORE_WHATSAPP_NUMBER.trim();
+}
+
 /** Normalized WhatsApp international digits for a deep-link. */
 export function whatsappDigital(): string {
   return STORE_WHATSAPP_NUMBER.replace(/[^0-9]/g, "");

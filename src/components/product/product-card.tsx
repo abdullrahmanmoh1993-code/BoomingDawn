@@ -84,26 +84,6 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 </p>
               )}
             </div>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                toggleWishlist(product.id);
-              }}
-              className={cn(
-                "p-1.5 min-w-11 min-h-11 rounded-full transition-colors shrink-0 flex items-center justify-center",
-                isWishlisted
-                  ? "text-accent-secondary"
-                  : "text-muted hover:text-foreground"
-              )}
-              aria-label={
-                isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`
-              }
-            >
-              <Heart
-                size={17}
-                fill={isWishlisted ? "currentColor" : "none"}
-              />
-            </button>
           </div>
           <div className="mt-1.5 flex items-center gap-2">
             <span className="text-sm font-medium">
@@ -117,6 +97,26 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
         </div>
       </Link>
+
+      {/* Wishlist heart — a sibling of the product link so the card never
+          nests a button inside an anchor (invalid interactive markup). */}
+      <button
+        onClick={() => toggleWishlist(product.id)}
+        className={cn(
+          "absolute top-3 right-3 z-10 p-1.5 min-w-11 min-h-11 rounded-full bg-background/60 backdrop-blur-sm flex items-center justify-center transition-colors",
+          isWishlisted
+            ? "text-accent-secondary"
+            : "text-foreground hover:text-accent"
+        )}
+        aria-label={
+          isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`
+        }
+      >
+        <Heart
+          size={17}
+          fill={isWishlisted ? "currentColor" : "none"}
+        />
+      </button>
     </motion.article>
   );
 }

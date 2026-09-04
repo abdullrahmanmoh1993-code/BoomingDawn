@@ -38,8 +38,8 @@ export function CartDrawer() {
           <p className="text-sm text-muted max-w-xs">
             Looks like you haven&apos;t added anything yet.
           </p>
-          <Button variant="outline" onClick={closeCart}>
-            <Link href="/products">Start Shopping</Link>
+          <Button variant="outline" onClick={closeCart} href="/products">
+            Start Shopping
           </Button>
         </div>
       ) : (
@@ -133,10 +133,8 @@ export function CartDrawer() {
               <span className="font-display text-lg">Total</span>
               <span className="font-display text-lg">{formatPrice(subtotal)}</span>
             </div>
-            <Button className="w-full" size="lg">
-              <Link href="/checkout" onClick={closeCart}>
-                Proceed to Checkout
-              </Link>
+            <Button className="w-full" size="lg" href="/checkout" onClick={closeCart}>
+              Proceed to Checkout
             </Button>
             <Button
               variant="outline"

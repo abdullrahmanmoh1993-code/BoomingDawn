@@ -2,7 +2,7 @@
 import { GOVERNORATES } from "@/lib/data/checkout";
 
 const EGYPTIAN_MOBILE =
-  /(?:\+20|0020|20|0)?(10|11|12|15)\d{8}/;
+  /^(?:\+20|0020|20|0)?(10|11|12|15)\d{8}$/;
 
 /** True if value looks like a valid Egyptian mobile number (local or +20 intl). */
 export function isEgyptianMobile(value: string): boolean {

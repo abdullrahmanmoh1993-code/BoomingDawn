@@ -35,6 +35,8 @@ import {
   whatsappLink,
   displayInstaPayNumber,
   isInstaPayConfigured,
+  displayWhatsAppNumber,
+  isWhatsAppConfigured,
   isCodAvailable,
   isValidPromo,
 } from "@/lib/data/checkout";
@@ -233,8 +235,8 @@ export default function CheckoutPage() {
         <p className="text-muted mb-8">
           Add a piece before checking out. Let&apos;s change that.
         </p>
-        <Button size="lg">
-          <Link href="/products">Start Shopping</Link>
+        <Button size="lg" href="/products">
+          Start Shopping
         </Button>
       </div>
     );
@@ -276,6 +278,8 @@ export default function CheckoutPage() {
             setInstaConfirmed={setInstaConfirmed}
             instaNumberConfigured={isInstaPayConfigured()}
             instaNumber={displayInstaPayNumber()}
+            whatsappConfigured={isWhatsAppConfigured()}
+            whatsappNumber={displayWhatsAppNumber()}
             onCopy={copyInstaPay}
             copied={copied}
             total={totals.total}
@@ -284,9 +288,6 @@ export default function CheckoutPage() {
           <TermsSection
             terms={terms}
             setTerms={setTerms}
-            instaConfirmed={instaConfirmed}
-            setInstaConfirmed={setInstaConfirmed}
-            paymentMethod={paymentMethod}
             errors={errors}
           />
         </div>
@@ -601,6 +602,8 @@ function PaymentSection({
   setInstaConfirmed,
   instaNumberConfigured,
   instaNumber,
+  whatsappConfigured,
+  whatsappNumber,
   onCopy,
   copied,
   total,
@@ -614,6 +617,8 @@ function PaymentSection({
   setInstaConfirmed: (v: boolean) => void;
   instaNumberConfigured: boolean;
   instaNumber: string;
+  whatsappConfigured: boolean;
+  whatsappNumber: string;
   onCopy: () => void;
   copied: boolean;
   total: number;
@@ -732,6 +737,8 @@ function PaymentSection({
                 instaConfirmed={instaConfirmed}
                 setInstaConfirmed={setInstaConfirmed}
                 number={instaNumber}
+                whatsappConfigured={whatsappConfigured}
+                whatsappNumber={whatsappNumber}
                 onCopy={onCopy}
                 copied={copied}
                 total={total}
@@ -750,6 +757,8 @@ function InstaPayDetails({
   instaConfirmed,
   setInstaConfirmed,
   number,
+  whatsappConfigured,
+  whatsappNumber,
   onCopy,
   copied,
   total,
@@ -758,6 +767,8 @@ function InstaPayDetails({
   instaConfirmed: boolean;
   setInstaConfirmed: (v: boolean) => void;
   number: string;
+  whatsappConfigured: boolean;
+  whatsappNumber: string;
   onCopy: () => void;
   copied: boolean;
   total: number;
@@ -800,12 +811,14 @@ function InstaPayDetails({
         </p>
       </div>
 
-      <div>
-        <p className="text-sm font-medium mb-1">WhatsApp Payment Confirmation</p>
-        <p className="border border-border p-3 text-sm font-medium">{number}</p>
-      </div>
+      {whatsappConfigured && (
+        <div>
+          <p className="text-sm font-medium mb-1">WhatsApp Payment Confirmation</p>
+          <p className="border border-border p-3 text-sm font-medium">{whatsappNumber}</p>
+        </div>
+      )}
 
-      {number && (
+      {whatsappConfigured && (
         <Button
           type="button"
           variant="outline"
@@ -835,16 +848,10 @@ function InstaPayDetails({
 function TermsSection({
   terms,
   setTerms,
-  instaConfirmed,
-  setInstaConfirmed,
-  paymentMethod,
   errors,
 }: {
   terms: boolean;
   setTerms: (v: boolean) => void;
-  instaConfirmed: boolean;
-  setInstaConfirmed: (v: boolean) => void;
-  paymentMethod: PaymentMethod | "";
   errors: Errors;
 }) {
   return (
@@ -861,17 +868,6 @@ function TermsSection({
         }
       />
       {errors.terms && <p className="text-xs text-accent-secondary">{errors.terms}</p>}
-      {paymentMethod === "instapay" && (
-        <>
-          <Checkbox
-            checked={instaConfirmed}
-            onChange={setInstaConfirmed}
-            error={!!errors.insta}
-            label="I have completed the InstaPay transfer and sent the payment screenshot via WhatsApp."
-          />
-          {errors.insta && <p className="text-xs text-accent-secondary">{errors.insta}</p>}
-        </>
-      )}
     </section>
   );
 }

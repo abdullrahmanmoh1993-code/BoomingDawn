@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 const DESKTOP_VIDEO = "/images/brand/hero-video.mp4";
@@ -70,11 +69,11 @@ export function Hero() {
           transition={{ duration: 0.6, delay: 0.8 }}
           className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Button variant="primary" size="lg" className="w-full sm:w-auto">
-            <Link href="/products">Shop the Collection</Link>
+          <Button variant="primary" size="lg" href="/products" className="w-full sm:w-auto">
+            Shop the Collection
           </Button>
-          <Button variant="outline" size="lg" className="w-full sm:w-auto">
-            <Link href="/about">View the Story</Link>
+          <Button variant="outline" size="lg" href="/about" className="w-full sm:w-auto">
+            View the Story
           </Button>
         </motion.div>
       </div>

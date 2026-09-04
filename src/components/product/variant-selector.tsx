@@ -86,7 +86,6 @@ export function VariantSelector({
                     ? "scale-100"
                     : "hover:bg-foreground/5"
                 )}
-                style={{ transform: undefined }}
                 aria-label={`Color: ${color.name}`}
                 aria-pressed={activeColor === color.name}
               >
@@ -120,7 +119,7 @@ export function VariantSelector({
                     key={size}
                     onClick={() => handleSizeChange(size!)}
                     className={cn(
-                      "h-10 px-4 text-sm border transition-all",
+                      "h-11 px-4 text-sm border transition-all",
                       selectedVariant?.size === size
                         ? "border-foreground bg-foreground text-background"
                         : "border-border hover:border-foreground/60"
@@ -140,7 +139,7 @@ export function VariantSelector({
                       onClick={() => handleSizeChange(size!)}
                       disabled={!hasStock}
                       className={cn(
-                        "h-10 px-4 text-sm border transition-all",
+                        "h-11 px-4 text-sm border transition-all",
                         selectedVariant?.size === size
                           ? "border-foreground bg-foreground text-background"
                           : "border-border hover:border-foreground/60",

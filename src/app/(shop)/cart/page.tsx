@@ -35,8 +35,8 @@ export default function CartPage() {
           <p className="text-muted mb-8">
             Looks like you haven&apos;t added anything yet. Let&apos;s change that.
           </p>
-          <Button size="lg">
-            <Link href="/products">Start Shopping</Link>
+          <Button size="lg" href="/products">
+            Start Shopping
           </Button>
         </div>
       </div>
@@ -171,11 +171,9 @@ export default function CartPage() {
                 )}
               </div>
 
-              <Link href="/checkout" className="block w-full">
-                <Button className="w-full mt-6" size="lg">
-                  Proceed to Checkout
-                </Button>
-              </Link>
+              <Button href="/checkout" className="w-full mt-6" size="lg">
+                Proceed to Checkout
+              </Button>
               <p className="text-xs text-muted text-center mt-3">
                 Delivery fee and any promo code are applied at checkout. Cash on
                 Delivery and InstaPay available.

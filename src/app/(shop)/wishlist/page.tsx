@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useWishlistStore } from "@/stores/wishlist-store";
 import { products } from "@/lib/data";
 import { Button } from "@/components/ui/button";
@@ -32,8 +31,8 @@ export default function WishlistPage() {
             <p className="text-muted mb-8">
               Save pieces you love and come back to them anytime.
             </p>
-            <Button size="lg">
-              <Link href="/products">Explore Products</Link>
+            <Button size="lg" href="/products">
+              Explore Products
             </Button>
           </div>
         )}
