@@ -23,8 +23,10 @@ const VIEWPORTS = [
   { name: "375", width: 375, height: 667 },
   { name: "390", width: 390, height: 844 },
   { name: "393", width: 393, height: 852 },
+  { name: "402", width: 402, height: 874 },
   { name: "412", width: 412, height: 915 },
   { name: "430", width: 430, height: 932 },
+  { name: "480", width: 480, height: 853 },
   { name: "landscape-844", width: 844, height: 390 },
   { name: "768-tab", width: 768, height: 1024 },
   { name: "1024", width: 1024, height: 768 },
@@ -141,6 +143,38 @@ test.describe("header mobile layout", () => {
 });
 
 test.describe("safe-area padding renders (calc guards)", () => {
+  test("header horizontal padding resolves at mobile width", async ({ page }) => {
+    await setViewport(page, { width: 320, height: 568 });
+    await page.goto("/");
+    const pad = await page
+      .locator("header .px-page")
+      .first()
+      .evaluate((el) => ({
+        left: parseFloat(getComputedStyle(el).paddingLeft),
+        right: parseFloat(getComputedStyle(el).paddingRight),
+      }));
+    // px-page base = max(1rem, calc(env + 1rem)); env()=0 headless => 16px.
+    expect(pad.left, `header paddingLeft was ${pad.left}px`).toBeGreaterThanOrEqual(15);
+    expect(pad.right, `header paddingRight was ${pad.right}px`).toBeGreaterThanOrEqual(15);
+  });
+
+  test("header horizontal padding grows at ≥sm (landscape) and stays finite", async ({
+    page,
+  }) => {
+    await setViewport(page, { width: 844, height: 390 });
+    await page.goto("/");
+    const pad = await page
+      .locator("header .px-page")
+      .first()
+      .evaluate((el) => ({
+        left: parseFloat(getComputedStyle(el).paddingLeft),
+        right: parseFloat(getComputedStyle(el).paddingRight),
+      }));
+    // sm breakpoint = 1.5rem = 24px
+    expect(pad.left).toBeGreaterThanOrEqual(23);
+    expect(pad.right).toBeGreaterThanOrEqual(23);
+  });
+
   test("mobile menu panel gets safe-area-aware top padding", async ({ page }) => {
     await setViewport(page, { width: 390, height: 844 });
     await page.goto("/");

@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react";
 export function FeaturedCollections() {
   return (
     <section className="py-20 lg:py-28">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-page">
         {/* Section header */}
         <div className="flex items-end justify-between mb-12">
           <div>

@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-app flex items-center justify-center px-4">
       <div className="text-center">
         <h1 className="font-display text-4xl font-medium mb-4">
           Something went wrong

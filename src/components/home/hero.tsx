@@ -37,7 +37,7 @@ export function Hero() {
   }, [videoSrc, prefersReducedMotion]);
 
   return (
-    <section className="video-hero relative w-full h-screen flex items-center justify-center overflow-hidden bg-foreground">
+    <section className="video-hero relative w-full flex items-center justify-center overflow-hidden bg-foreground">
       {/* Full-screen background video with poster fallback */}
       <video
         ref={videoRef}

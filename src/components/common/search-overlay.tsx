@@ -53,7 +53,7 @@ function SearchContent({ onClose }: { onClose: () => void }) {
   }, [query]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pt-[max(5rem,calc(env(safe-area-inset-top,0px)_+_2.5rem))]">
+    <div className="max-w-2xl mx-auto px-page pt-[max(5rem,calc(env(safe-area-inset-top,0px)_+_2.5rem))]">
       {/* Search Input */}
       <div className="relative">
         <Search size={20} className="absolute left-0 top-1/2 -translate-y-1/2 text-muted" />

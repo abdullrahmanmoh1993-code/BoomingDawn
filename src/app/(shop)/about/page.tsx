@@ -16,7 +16,7 @@ export default function AboutPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-white">
+        <div className="relative z-10 max-w-[1440px] mx-auto px-page text-white">
           <p className="text-accent text-xs uppercase tracking-[0.3em] mb-4">
             Our Story
           </p>
@@ -59,7 +59,7 @@ export default function AboutPage() {
 
       {/* Values */}
       <section className="py-16 lg:py-20 bg-surface border-y border-border">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-3 gap-10">
+        <div className="max-w-[1440px] mx-auto px-page grid sm:grid-cols-3 gap-10">
           {[
             {
               title: "Craft",

@@ -60,7 +60,7 @@ export function Header() {
             : "bg-transparent"
         )}
       >
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-page">
           <div className="flex items-center justify-between min-h-[64px] lg:h-[64px] pt-[env(safe-area-inset-top,0px)] overflow-visible">
             {/* Left cluster: hamburger + logo on mobile, centered logo on desktop */}
             <div className="flex items-center gap-2 lg:absolute lg:left-1/2 lg:top-0 lg:-translate-x-1/2 lg:h-full lg:gap-0">

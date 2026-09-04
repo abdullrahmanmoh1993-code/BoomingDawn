@@ -90,7 +90,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                 toggleWishlist(product.id);
               }}
               className={cn(
-                "p-1.5 rounded-full transition-colors shrink-0",
+                "p-1.5 min-w-11 min-h-11 rounded-full transition-colors shrink-0 flex items-center justify-center",
                 isWishlisted
                   ? "text-accent-secondary"
                   : "text-muted hover:text-foreground"

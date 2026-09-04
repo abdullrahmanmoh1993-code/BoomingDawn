@@ -104,3 +104,66 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--brand-orange);
 }
+
+/* ============================================================
+   Responsive shell helpers
+   ============================================================
+   `.px-page` mirrors the px-4 / sm:px-6 / lg:px-8 values while never
+   letting content sit under a landscape notch, Dynamic Island side
+   inset, punch-hole, or rounded display corner. In portrait phones the
+   left/right insets report 0, so behavior is pixel-identical to the
+   original utilities. max() keeps the designed comfortable padding even
+   when the browser reports no insets.
+   ============================================================ */
+.px-page {
+  padding-left: max(1rem, calc(env(safe-area-inset-left, 0px) + 1rem));
+  padding-right: max(1rem, calc(env(safe-area-inset-right, 0px) + 1rem));
+}
+
+@media (min-width: 40rem) {
+  .px-page {
+    padding-left: max(1.5rem, calc(env(safe-area-inset-left, 0px) + 1.5rem));
+    padding-right: max(1.5rem, calc(env(safe-area-inset-right, 0px) + 1.5rem));
+  }
+}
+
+@media (min-width: 64rem) {
+  .px-page {
+    padding-left: max(2rem, calc(env(safe-area-inset-left, 0px) + 2rem));
+    padding-right: max(2rem, calc(env(safe-area-inset-right, 0px) + 2rem));
+  }
+}
+
+/* Full-viewport sections: prefer the dynamic viewport height so they always
+   fill exactly the visible area as iOS Safari / Android Chrome toolbars
+   collapse, with vh as the fallback for older browsers. */
+.video-hero {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.dawn-stages {
+  height: 300vh;
+  height: 300dvh;
+}
+
+.dawn-stages .sticky-container {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.dawn-stages .product {
+  max-height: 75vh;
+  max-height: 75dvh;
+}
+
+.min-h-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Modal panels: never taller than the visible viewport. */
+.modal-panel {
+  max-height: 85vh;
+  max-height: 85dvh;
+}

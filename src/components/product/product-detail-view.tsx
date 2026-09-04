@@ -53,7 +53,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     <div className="relative pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
       {/* Dawn stage atmosphere */}
       <DawnBackground stage={product.dawnStage} />
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1440px] mx-auto px-page">
         {/* Breadcrumbs */}
         <nav
           className="py-6 flex items-center gap-1.5 text-xs text-muted"

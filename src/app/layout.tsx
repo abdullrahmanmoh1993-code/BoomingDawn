@@ -101,7 +101,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${anton.variable} ${inter.variable} ${cairo.variable} font-body bg-background text-foreground antialiased min-h-screen flex flex-col`}
+        className={`${anton.variable} ${inter.variable} ${cairo.variable} font-body bg-background text-foreground antialiased min-h-app flex flex-col`}
       >
         <script
           type="application/ld+json"

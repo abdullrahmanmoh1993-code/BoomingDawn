@@ -45,7 +45,7 @@ export default function CartPage() {
 
   return (
     <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+      <div className="max-w-[1200px] mx-auto px-page py-12 lg:py-16">
         <h1 className="font-display text-booming-red text-3xl sm:text-4xl mb-10">
           Shopping Bag
         </h1>
@@ -96,7 +96,7 @@ export default function CartPage() {
                         onClick={() =>
                           removeItem(item.productId, item.variantId)
                         }
-                        className="text-muted hover:text-accent-secondary transition-colors p-1 h-fit"
+                        className="text-muted hover:text-accent-secondary transition-colors min-w-11 min-h-11 flex items-center justify-center p-1 h-fit"
                         aria-label={`Remove ${product.name} from bag`}
                       >
                         <Trash2 size={18} />
@@ -113,7 +113,7 @@ export default function CartPage() {
                               item.quantity - 1
                             )
                           }
-                          className="p-2 hover:bg-foreground/5 transition-colors"
+                          className="min-w-11 min-h-11 flex items-center justify-center p-2 hover:bg-foreground/5 transition-colors"
                           aria-label={`Decrease quantity of ${product.name}`}
                         >
                           <Minus size={14} />
@@ -129,7 +129,7 @@ export default function CartPage() {
                               item.quantity + 1
                             )
                           }
-                          className="p-2 hover:bg-foreground/5 transition-colors"
+                          className="min-w-11 min-h-11 flex items-center justify-center p-2 hover:bg-foreground/5 transition-colors"
                           aria-label={`Increase quantity of ${product.name}`}
                         >
                           <Plus size={14} />

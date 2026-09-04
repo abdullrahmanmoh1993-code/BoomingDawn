@@ -81,7 +81,7 @@ export function CartDrawer() {
                     </div>
                     <button
                       onClick={() => removeItem(item.productId, item.variantId)}
-                      className="text-muted hover:text-accent-secondary transition-colors shrink-0 p-1"
+                      className="text-muted hover:text-accent-secondary transition-colors shrink-0 min-w-11 min-h-11 flex items-center justify-center p-1"
                       aria-label={`Remove ${product.name} from bag`}
                     >
                       <Trash2 size={16} />
@@ -94,7 +94,7 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.productId, item.variantId, item.quantity - 1)
                         }
-                        className="p-1.5 hover:bg-foreground/5 transition-colors"
+                        className="min-w-11 min-h-11 flex items-center justify-center p-1.5 hover:bg-foreground/5 transition-colors"
                         aria-label={`Decrease quantity of ${product.name}`}
                       >
                         <Minus size={14} />
@@ -104,7 +104,7 @@ export function CartDrawer() {
                         onClick={() =>
                           updateQuantity(item.productId, item.variantId, item.quantity + 1)
                         }
-                        className="p-1.5 hover:bg-foreground/5 transition-colors"
+                        className="min-w-11 min-h-11 flex items-center justify-center p-1.5 hover:bg-foreground/5 transition-colors"
                         aria-label={`Increase quantity of ${product.name}`}
                       >
                         <Plus size={14} />

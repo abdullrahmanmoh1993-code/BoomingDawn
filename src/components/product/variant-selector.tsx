@@ -81,15 +81,25 @@ export function VariantSelector({
                 key={color.name}
                 onClick={() => handleColorChange(color.name)}
                 className={cn(
-                  "w-8 h-8 rounded-full border-2 transition-all",
+                  "w-11 h-11 rounded-full flex items-center justify-center transition-colors",
                   activeColor === color.name
-                    ? "border-foreground scale-110"
-                    : "border-border hover:border-foreground/50"
+                    ? "scale-100"
+                    : "hover:bg-foreground/5"
                 )}
-                style={{ backgroundColor: color.hex }}
+                style={{ transform: undefined }}
                 aria-label={`Color: ${color.name}`}
                 aria-pressed={activeColor === color.name}
-              />
+              >
+                <span
+                  className={cn(
+                    "w-8 h-8 rounded-full border-2 transition-transform",
+                    activeColor === color.name
+                      ? "border-foreground scale-110"
+                      : "border-border"
+                  )}
+                  style={{ backgroundColor: color.hex }}
+                />
+              </button>
             ))}
           </div>
         </div>

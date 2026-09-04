@@ -21,7 +21,7 @@ export default function ProductsPage() {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 max-w-[1440px] mx-auto px-page">
           <p className="text-xs uppercase tracking-[0.3em] text-muted mb-3">
             The Complete
           </p>
@@ -36,7 +36,7 @@ export default function ProductsPage() {
       </section>
 
       <section className="py-16 lg:py-24">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1440px] mx-auto px-page">
           <div className="flex items-center justify-between mb-12">
             <p className="text-sm text-muted">
               {products.length} {products.length === 1 ? "product" : "products"}

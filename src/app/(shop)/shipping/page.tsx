@@ -16,7 +16,7 @@ export default function ShippingPage() {
           style={{ backgroundImage: "url(/images/editorial/road.jpg)" }}
         />
         <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-white">
+        <div className="relative z-10 max-w-[1440px] mx-auto px-page text-white">
           <p className="text-accent text-xs uppercase tracking-[0.3em] mb-4">
             Deliveries Across Egypt
           </p>
@@ -27,7 +27,7 @@ export default function ShippingPage() {
       </section>
 
       <section className="py-20 lg:py-24">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12">
+        <div className="max-w-[1440px] mx-auto px-page grid lg:grid-cols-2 gap-12">
           {/* Delivery options */}
           <div>
             <h2 className="font-display text-2xl mb-6">Delivery Options</h2>

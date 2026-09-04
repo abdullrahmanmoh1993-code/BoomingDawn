@@ -44,7 +44,7 @@ export function OrderSummary({
     <div className="border border-border p-6">
       <h2 className="font-display text-lg mb-5">Order Summary</h2>
 
-      <ul className="space-y-4 max-h-[40vh] overflow-y-auto pr-1 -mr-1">
+      <ul className="space-y-4 max-h-[40dvh] overflow-y-auto pr-1 -mr-1">
         {items.map((item) => {
           const resolved = resolveItem(item);
           if (!resolved) return null;

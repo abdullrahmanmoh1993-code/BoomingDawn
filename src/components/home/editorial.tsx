@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export function Editorial() {
   return (
     <section className="py-20 lg:py-28">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <div className="max-w-[1440px] mx-auto px-page grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         {/* Image */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}

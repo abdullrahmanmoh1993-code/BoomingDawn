@@ -241,7 +241,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 pb-32 lg:pb-10">
+    <div className="max-w-[1200px] mx-auto px-page py-6 lg:py-10 pb-32 lg:pb-10">
       <p className="flex items-center gap-1.5 text-xs text-muted mb-4">
         <ShieldCheck size={13} /> Secure checkout · Review everything below, then place your order in one step.
       </p>
@@ -361,7 +361,7 @@ export default function CheckoutPage() {
       </form>
 
       {/* Mobile: full-width sticky Place Order bar */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border p-4 pb-[calc(1rem_+_env(safe-area-inset-bottom,0px))]">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-border pt-4 pl-[max(1rem,calc(env(safe-area-inset-left,0px)_+_1rem))] pr-[max(1rem,calc(env(safe-area-inset-right,0px)_+_1rem))] pb-[calc(1rem_+_env(safe-area-inset-bottom,0px))]">
         <div className="flex items-center gap-3">
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-muted mb-1">

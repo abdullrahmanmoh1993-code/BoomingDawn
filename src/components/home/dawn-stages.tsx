@@ -136,12 +136,11 @@ export function DawnStages() {
     <section
       ref={sectionRef}
       className="dawn-stages relative"
-      style={{ height: "300vh" }}
       aria-label="The three stages of dawn"
     >
-      {/* Sticky 100vh viewport */}
+      {/* Sticky viewport */}
       <div
-        className="sticky-container sticky top-0 h-screen w-full overflow-hidden bg-[#0a0f1a]"
+        className="sticky-container sticky top-0 w-full overflow-hidden bg-[#0a0f1a]"
         style={{ zIndex: 1 }}
       >
         {/* Backgrounds */}
@@ -191,7 +190,7 @@ export function DawnStages() {
             }}
             src={s.product}
             alt={s.productAlt}
-            className="product absolute right-[8%] sm:right-[10%] top-1/2 -translate-y-1/2 max-w-[60vw] sm:max-w-[45vw] max-h-[75vh] w-auto h-auto object-contain"
+            className="product absolute right-[8%] sm:right-[10%] top-1/2 -translate-y-1/2 max-w-[60vw] sm:max-w-[45vw] w-auto h-auto object-contain"
             style={{ opacity: 0 }}
           />
         ))}
