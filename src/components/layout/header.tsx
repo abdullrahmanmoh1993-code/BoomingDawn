@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useSyncExternalStore } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { Search, ShoppingBag, Heart, Menu, X } from "lucide-react";
 import { siteConfig } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,17 @@ import { useWishlistStore } from "@/stores/wishlist-store";
 import { ThemeToggle } from "./theme-toggle";
 import { MobileNav } from "./mobile-nav";
 import { Logo } from "@/components/brand/Logo";
-import { SearchOverlay } from "@/components/common/search-overlay";
+
+const SearchOverlay = dynamic(
+  () =>
+    import("@/components/common/search-overlay").then((m) => m.SearchOverlay),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="fixed inset-0 z-50 bg-background/98 backdrop-blur-sm" />
+    ),
+  }
+);
 
 /** True only after the component hydrates on the client (false during SSR). */
 function useHydrated() {

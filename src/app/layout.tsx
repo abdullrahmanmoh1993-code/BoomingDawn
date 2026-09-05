@@ -1,4 +1,4 @@
-import { Inter, Anton, Cairo } from "next/font/google";
+import { Inter, Anton } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { siteConfig } from "@/lib/constants";
@@ -23,12 +23,6 @@ const anton = Anton({
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const cairo = Cairo({
-  variable: "--font-cairo",
-  subsets: ["latin", "arabic"],
   display: "swap",
 });
 
@@ -102,7 +96,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${anton.variable} ${inter.variable} ${cairo.variable} font-body bg-background text-foreground antialiased min-h-app flex flex-col`}
+        className={`${anton.variable} ${inter.variable} font-body bg-background text-foreground antialiased min-h-app flex flex-col`}
       >
         <script
           type="application/ld+json"
