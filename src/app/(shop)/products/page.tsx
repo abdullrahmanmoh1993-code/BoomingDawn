@@ -2,6 +2,8 @@ import Image from "next/image";
 import { products } from "@/lib/data";
 import { ProductGrid } from "@/components/product/product-grid";
 
+export const dynamic = "force-static";
+
 export const metadata = {
   title: "All Products",
   description:

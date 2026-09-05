@@ -197,8 +197,8 @@ export default function CheckoutPage() {
           promoCode: promoApplied ? promo : undefined,
         }),
       });
-      const data = await res.json();
-      if (!res.ok) {
+      const data = (await res.json()) as { error?: string; order?: Order };
+      if (!res.ok || !data.order) {
         setSubmitError(typeof data.error === "string" ? data.error : "We couldn't place your order. Please try again.");
         setPlacing(false);
         return;

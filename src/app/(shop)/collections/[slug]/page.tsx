@@ -1,8 +1,18 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getCollectionBySlug, getProductsByCollection } from "@/lib/data";
+import {
+  getCollectionBySlug,
+  getProductsByCollection,
+  collections,
+} from "@/lib/data";
 import { siteConfig } from "@/lib/constants";
 import { ProductGrid } from "@/components/product/product-grid";
+
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+  return collections.map((c) => ({ slug: c.slug }));
+}
 
 function abs(url: string) {
   return `${siteConfig.url}${url}`;
@@ -51,8 +61,26 @@ export default async function CollectionPage({
 
   const products = getProductsByCollection(slug);
 
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: collection.name,
+    itemListElement: products.map((product, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: product.name,
+      url: abs(`/products/${product.slug}`),
+    })),
+  };
+
   return (
     <div className="pt-[max(4rem,calc(env(safe-area-inset-top,0px)_+_2.75rem))] lg:pt-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(itemListJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* Collection Hero */}
       <section className="relative py-24 lg:py-32 border-b border-border overflow-hidden">
         <Image

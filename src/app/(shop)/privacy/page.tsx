@@ -1,5 +1,7 @@
 import { siteConfig } from "@/lib/constants";
 
+export const dynamic = "force-static";
+
 export const metadata = {
   title: "Privacy Policy",
   description: "How The Booming Dawn collects, uses, and protects your information.",

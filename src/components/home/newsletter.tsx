@@ -4,19 +4,35 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+type Status = "idle" | "loading" | "success" | "error";
+
 export function Newsletter() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !/.+@.+\..+/.test(email)) {
+      setStatus("error");
       setError("Please enter a valid email address.");
       return;
     }
+    setStatus("loading");
     setError("");
-    setSubmitted(true);
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      setEmail("");
+    } catch {
+      setStatus("error");
+      setError("Something went wrong. Please try again in a moment.");
+    }
   };
 
   return (
@@ -33,25 +49,30 @@ export function Newsletter() {
           sales. No noise, just the good stuff.
         </p>
 
-        {submitted ? (
-          <div className="p-6 border border-accent/30 bg-surface">
-            <p className="font-medium">Welcome to the Dawn List.</p>
+        {status === "success" ? (
+          <div className="p-6 border border-accent/30 bg-surface" role="status">
+            <p className="font-medium">You&apos;re on the Dawn List.</p>
             <p className="text-sm text-muted mt-1">
-              Watch your inbox for something special.
+              We&apos;ll email you the moment the next drop goes live.
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+          >
             <Input
               type="email"
+              name="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={error}
               aria-label="Email address"
+              required
             />
-            <Button type="submit" className="shrink-0">
-              Subscribe
+            <Button type="submit" className="shrink-0" disabled={status === "loading"}>
+              {status === "loading" ? "Subscribing…" : "Subscribe"}
             </Button>
           </form>
         )}

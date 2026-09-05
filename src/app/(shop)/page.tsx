@@ -6,6 +6,8 @@ import { Editorial } from "@/components/home/editorial";
 import { Newsletter } from "@/components/home/newsletter";
 import { Slogan } from "@/components/brand/Slogan";
 
+export const dynamic = "force-static";
+
 export const metadata = {
   title: {
     absolute: "The Booming Dawn | الفجر الصاخب",

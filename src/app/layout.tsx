@@ -1,5 +1,6 @@
 import { Inter, Anton, Cairo } from "next/font/google";
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { siteConfig } from "@/lib/constants";
 import "./globals.css";
 
@@ -108,6 +109,11 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
           }}
+        />
+        <Script
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          strategy="afterInteractive"
+          data-cf-beacon='{"token":"1f9609b3afa24e32860d31dc0cb1eaec","spa":true}'
         />
         {children}
       </body>

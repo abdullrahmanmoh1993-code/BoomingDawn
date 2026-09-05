@@ -16,6 +16,7 @@ const eslintConfig = defineConfig([
     "dist/**",
     ".vinext/**",
     ".wrangler/**",
+    "worker-configuration.d.ts",
   ]),
 ]);
 

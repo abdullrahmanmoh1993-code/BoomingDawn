@@ -1,7 +1,13 @@
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/lib/data";
+import { getProductBySlug, products } from "@/lib/data";
 import { siteConfig } from "@/lib/constants";
 import { ProductDetailView } from "@/components/product/product-detail-view";
+
+export const dynamic = "force-static";
+
+export function generateStaticParams() {
+  return products.map((p) => ({ slug: p.slug }));
+}
 
 function abs(url: string) {
   return `${siteConfig.url}${url}`;

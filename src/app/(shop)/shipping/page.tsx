@@ -1,6 +1,8 @@
 import { DELIVERY_OPTIONS, FREE_DELIVERY_THRESHOLD } from "@/lib/data/checkout";
 import { formatPrice } from "@/lib/utils";
 
+export const dynamic = "force-static";
+
 export const metadata = {
   title: "Shipping & Delivery",
   description:
