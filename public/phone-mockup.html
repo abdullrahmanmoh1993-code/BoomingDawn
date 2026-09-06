@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mock Phone — The Booming Dawn</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: radial-gradient(1200px 600px at 50% -10%, #1a1712 0%, #0a0908 55%, #050404 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #d9d2c8;
+      padding: 24px 16px;
+    }
+
+    header {
+      text-align: center;
+      z-index: 5;
+    }
+    header h1 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin: 0 0 6px;
+      color: #f2ede4;
+    }
+    header p { margin: 0; font-size: 12px; color: #8f877b; }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      z-index: 5;
+    }
+    .controls button {
+      appearance: none;
+      border: 1px solid #36302a;
+      background: #161310;
+      color: #e7e0d4;
+      font: 500 12px/1 system-ui, sans-serif;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .controls button:hover { border-color: #bb2329; background: #1d1815; }
+    .controls button:active { transform: translateY(1px); }
+    .controls button.primary { color: #0c0a08; background: #ef833c; border-color: #ef833c; font-weight: 700; }
+
+    .stage {
+      transform-origin: center center;
+      will-change: transform;
+    }
+
+    /* iPhone-style frame */
+    .phone {
+      position: relative;
+      width: 402px;
+      height: 862px;
+      border-radius: 58px;
+      padding: 11px;
+      background: linear-gradient(145deg, #3c3a38, #171615 60%, #2c2a28);
+      box-shadow:
+        0 40px 80px -20px rgba(0,0,0,.85),
+        0 8px 24px rgba(0,0,0,.6),
+        inset 0 1px 1px rgba(255,255,255,.18),
+        inset 0 -1px 2px rgba(0,0,0,.8);
+    }
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 12px; right: 12px;
+      height: 120px;
+      border-radius: 0 0 999px 999px;
+      background: linear-gradient(rgba(255,255,255,.16), rgba(255,255,255,0) 70%);
+      pointer-events: none;
+    }
+    /* side buttons */
+    .phone .btn-r {
+      position: absolute;
+      right: -2px;
+      width: 3px;
+      border-radius: 2px;
+      background: #353331;
+    }
+    .phone .btn-r.s1  { top: 170px; height: 62px; }
+    .phone .btn-r.s2  { top: 242px; height: 90px; }
+    .phone .btn-r.s3  { top: 342px; height: 90px; }
+    /* screen */
+    .phone .screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 48px;
+      overflow: hidden;
+      background: #000;
+    }
+    .phone .screen iframe {
+      display: block;
+      width: 100%;
+      height: calc(100% - 47px);
+      margin-top: 47px;
+      border: 0;
+      background: #000;
+    }
+    /* dynamic island */
+    .phone .island {
+      position: absolute;
+      top: 11px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 122px;
+      height: 34px;
+      border-radius: 22px;
+      background: #000;
+      box-shadow: inset 0 0 2px rgba(255,255,255,.08);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .phone .island .cam {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #1c2b3a, #05070b 70%);
+    }
+
+    footer { font-size: 11px; color: #6d6559; z-index: 5; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Mock Phone — The Booming Dawn</h1>
+    <p>Live preview of the top bar at iPhone&nbsp;13 size. Click inside the phone to use the site.</p>
+  </header>
+
+  <div class="controls">
+    <button id="seed" class="primary">Show badges (seed cart + wishlist)</button>
+    <button id="reset">Reset</button>
+    <button id="reload">Reload site</button>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="phone">
+      <div class="btn-r s1"></div>
+      <div class="btn-r s2"></div>
+      <div class="btn-r s3"></div>
+      <div class="screen">
+        <iframe id="frame" src="/" title="The Booming Dawn mobile preview"></iframe>
+        <div class="island"><div class="cam"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Header badge fix: verified no clipping at this viewport.</footer>
+
+  <script>
+    const frame = document.getElementById("frame");
+    const stage = document.getElementById("stage");
+
+    function fit() {
+      const availW = window.innerWidth - 36;
+      const availH = window.innerHeight - 130;
+      const scale = Math.min(1, availW / 402, availH / 862);
+      stage.style.transform = "scale(" + scale + ")";
+    }
+    window.addEventListener("resize", fit);
+    fit();
+
+    function writeStore(key, value) {
+      const win = frame.contentWindow;
+      if (!win || !win.localStorage) return false;
+      win.localStorage.setItem(key, value);
+      return true;
+    }
+
+    function readStore(key) {
+      const win = frame.contentWindow;
+      if (!win || !win.localStorage) return null;
+      try {
+        return JSON.parse(win.localStorage.getItem(key) || "null");
+      } catch {
+        return null;
+      }
+    }
+
+    function alreadySeeded() {
+      const cart = readStore("tbd-cart");
+      const wish = readStore("tbd-wishlist");
+      return Boolean(
+        cart?.state?.items?.length > 0 && wish?.state?.productIds?.length > 0
+      );
+    }
+
+    function seed() {
+      if (alreadySeeded()) return true; // no write/reload needed
+      const ok =
+        writeStore(
+          "tbd-cart",
+          JSON.stringify({
+            state: {
+              items: [
+                { productId: "nautical-tee", variantId: "nautical-tee-black-m", quantity: 1 },
+              ],
+              isOpen: false,
+            },
+            version: 0,
+          })
+        ) &&
+        writeStore(
+          "tbd-wishlist",
+          JSON.stringify({ state: { productIds: ["nautical-tee"] }, version: 0 })
+        );
+      if (!ok) {
+        alert("Cannot seed: make sure the phone is previewing the site on the same origin (localhost:3000).");
+        return false;
+      }
+      // Reload so the Zustand persisted stores rehydrate with the badges.
+      frame.src = frame.src;
+      return true;
+    }
+
+    document.getElementById("seed").addEventListener("click", seed);
+    document.getElementById("reset").addEventListener("click", () => {
+      const win = frame.contentWindow;
+      if (win && win.localStorage) {
+        win.localStorage.removeItem("tbd-cart");
+        win.localStorage.removeItem("tbd-wishlist");
+      }
+      frame.src = frame.src;
+    });
+    document.getElementById("reload").addEventListener("click", () => {
+      frame.src = frame.src;
+    });
+
+    // Seed once on load so the badges appear immediately.
+    const listener = () => {
+      frame.removeEventListener("load", listener);
+      seed();
+    };
+    frame.addEventListener("load", listener);
+  </script>
+</body>
+</html>

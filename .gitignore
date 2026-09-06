@@ -48,7 +48,6 @@ dev-server.log
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/public/phone-mockup.html
 /dist/
 .vinext/
 .wrangler/
