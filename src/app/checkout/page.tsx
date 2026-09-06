@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  CreditCard,
   Banknote,
   Smartphone,
   Copy,
@@ -45,17 +44,12 @@ import {
   computeTotals,
   estimatedDeliveryFor,
 } from "@/lib/checkout/orders";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 import {
   isEgyptianMobile,
   isValidEmail,
   normalizeMobile,
-  isValidCardNumber,
-  isValidExpiry,
-  isValidCvv,
-  detectCardType,
-  formatCardNumber,
 } from "@/lib/checkout/validation";
-import { isCardPaymentAvailable } from "@/lib/checkout/payment";
 import type { DeliveryAddress, Order, PaymentMethod } from "@/lib/types";
 
 interface AddressForm {
@@ -96,11 +90,11 @@ export default function CheckoutPage() {
   const [addr, setAddr] = useState<AddressForm>(emptyAddress);
   const [deliveryId, setDeliveryId] = useState(DELIVERY_OPTIONS[0]?.id ?? "");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | "">("");
-  const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
   const [promo, setPromo] = useState("");
   const [promoApplied, setPromoApplied] = useState(false);
   const [terms, setTerms] = useState(false);
   const [instaConfirmed, setInstaConfirmed] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [placing, setPlacing] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -154,12 +148,7 @@ export default function CheckoutPage() {
     if (!addr.city.trim()) e.city = "Please enter your city or area.";
     if (!addr.street.trim()) e.street = "Please enter your delivery address.";
     if (!paymentMethod) e.payment = "Please select a payment method.";
-    if (paymentMethod === "card") {
-      if (!card.name.trim()) e.cardName = "Please enter the name on card.";
-      if (!isValidCardNumber(card.number)) e.cardNumber = "Please enter a valid card number.";
-      if (!isValidExpiry(card.expiry)) e.cardExpiry = "Please enter a valid expiry (MM / YY).";
-      if (!isValidCvv(card.cvv)) e.cardCvv = "Please enter a valid CVV.";
-    }
+    if (!turnstileToken) e.turnstile = "Please complete the security check.";
     if (!terms) e.terms = "Please accept the Terms & Conditions.";
     if (paymentMethod === "instapay" && !instaConfirmed)
       e.insta = "Please confirm that you have completed the InstaPay transfer and sent the screenshot via WhatsApp.";
@@ -171,10 +160,6 @@ export default function CheckoutPage() {
   const placeOrder = async () => {
     if (!validateAll()) {
       setSubmitError("Please fix the highlighted fields before placing your order.");
-      return;
-    }
-    if (paymentMethod === "card" && !isCardPaymentAvailable()) {
-      setSubmitError("Online card payment is not available yet. Please choose Cash on Delivery or InstaPay.");
       return;
     }
     if (paymentMethod === "instapay" && !isInstaPayConfigured()) {
@@ -195,6 +180,7 @@ export default function CheckoutPage() {
           deliveryMethod: deliveryId,
           paymentMethod,
           promoCode: promoApplied ? promo : undefined,
+          turnstileToken,
         }),
       });
       const data = (await res.json()) as { error?: string; order?: Order };
@@ -271,8 +257,6 @@ export default function CheckoutPage() {
           <PaymentSection
             paymentMethod={paymentMethod}
             setPaymentMethod={setPaymentMethod}
-            card={card}
-            setCard={setCard}
             errors={errors}
             instaConfirmed={instaConfirmed}
             setInstaConfirmed={setInstaConfirmed}
@@ -289,6 +273,13 @@ export default function CheckoutPage() {
             terms={terms}
             setTerms={setTerms}
             errors={errors}
+          />
+
+          <TurnstileSection
+            token={turnstileToken}
+            onToken={setTurnstileToken}
+            onExpire={() => setTurnstileToken("")}
+            error={errors.turnstile}
           />
         </div>
 
@@ -595,8 +586,6 @@ function DeliverySection({
 function PaymentSection({
   paymentMethod,
   setPaymentMethod,
-  card,
-  setCard,
   errors,
   instaConfirmed,
   setInstaConfirmed,
@@ -610,8 +599,6 @@ function PaymentSection({
 }: {
   paymentMethod: PaymentMethod | "";
   setPaymentMethod: (m: PaymentMethod) => void;
-  card: { name: string; number: string; expiry: string; cvv: string };
-  setCard: (c: { name: string; number: string; expiry: string; cvv: string }) => void;
   errors: Errors;
   instaConfirmed: boolean;
   setInstaConfirmed: (v: boolean) => void;
@@ -623,78 +610,10 @@ function PaymentSection({
   copied: boolean;
   total: number;
 }) {
-  const cardType = detectCardType(card.number);
   return (
     <section>
       <SectionHeading icon={<CreditCardIcon size={15} />} step="4" title="Payment Method" />
       <div className="space-y-3">
-        <RadioCard
-          name="payment"
-          value="card"
-          checked={paymentMethod === "card"}
-          onChange={(v) => setPaymentMethod(v as PaymentMethod)}
-          title={
-            <span className="inline-flex items-center gap-2">
-              <CreditCard size={16} className="text-muted" /> Credit / Debit Card
-            </span>
-          }
-          description="Pay securely online."
-          error={!!errors.payment}
-        />
-        {paymentMethod === "card" && (
-          <div className="border border-border p-5 space-y-4 -mt-1">
-            <Input
-              label="Name on Card"
-              value={card.name}
-              onChange={(e) => setCard({ ...card, name: e.target.value })}
-              error={errors.cardName}
-              autoComplete="cc-name"
-            />
-            <Input
-              label="Card Number"
-              value={card.number}
-              onChange={(e) => setCard({ ...card, number: formatCardNumber(e.target.value) })}
-              error={errors.cardNumber}
-              placeholder="1234 5678 9012 3456"
-              inputMode="numeric"
-              autoComplete="cc-number"
-            />
-            {cardType !== "unknown" && (
-              <p className="text-xs text-muted -mt-2">
-                {cardType === "visa" && "Visa"}
-                {cardType === "mastercard" && "Mastercard"}
-                {cardType === "amex" && "American Express"}
-              </p>
-            )}
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Expiry"
-                value={card.expiry}
-                onChange={(e) => setCard({ ...card, expiry: e.target.value })}
-                error={errors.cardExpiry}
-                placeholder="MM / YY"
-                inputMode="numeric"
-                autoComplete="cc-exp"
-              />
-              <Input
-                label="CVV"
-                type="password"
-                value={card.cvv}
-                onChange={(e) => setCard({ ...card, cvv: e.target.value.replace(/\D/g, "").slice(0, 4) })}
-                error={errors.cardCvv}
-                placeholder="CVV"
-                inputMode="numeric"
-                autoComplete="cc-csc"
-              />
-            </div>
-            {!isCardPaymentAvailable() && (
-              <p className="text-xs text-accent-secondary border border-accent-secondary/30 p-3">
-                Online card payment is not available yet. Please use Cash on Delivery or InstaPay.
-              </p>
-            )}
-          </div>
-        )}
-
         <RadioCard
           name="payment"
           value="cod"
@@ -868,6 +787,34 @@ function TermsSection({
         }
       />
       {errors.terms && <p className="text-xs text-accent-secondary">{errors.terms}</p>}
+    </section>
+  );
+}
+
+/* ---------- Turnstile ---------- */
+function TurnstileSection({
+  token,
+  onToken,
+  onExpire,
+  error,
+}: {
+  token: string;
+  onToken: (t: string) => void;
+  onExpire: () => void;
+  error?: string;
+}) {
+  return (
+    <section className="space-y-3">
+      <p className="text-xs text-muted tracking-wide">Security Check</p>
+      <div className="border border-border p-5">
+        <TurnstileWidget onToken={onToken} onExpire={onExpire} />
+        {error && <p className="mt-2 text-xs text-accent-secondary">{error}</p>}
+        {token && (
+          <p className="mt-2 text-xs text-accent flex items-center gap-1">
+            <Check size={13} /> Verified — you&apos;re all set.
+          </p>
+        )}
+      </div>
     </section>
   );
 }

@@ -117,6 +117,8 @@ export function estimatedDeliveryFor(governorate: string, from = new Date()): st
 /** Generate a real, sequential-looking order number. */
 export function generateOrderNumber(): string {
   const datePart = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-  const rand = String(Math.floor(1000 + Math.random() * 9000));
+  const bytes = new Uint32Array(1);
+  crypto.getRandomValues(bytes);
+  const rand = String(1000 + (bytes[0] % 9000));
   return `EG${datePart}-${rand}`;
 }

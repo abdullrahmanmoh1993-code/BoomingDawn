@@ -24,7 +24,7 @@ surface.
 src/
 ├── app/                # Routes (App Router)
 │   ├── (shop)/         # Shop pages (home, collections, products, cart, checkout, …)
-│   └── api/orders/     # POST /api/orders — validates + totals an order
+│   └── api/           # POST /api/orders, /api/subscribe, POST /api/csp-report
 ├── components/
 │   ├── layout/         # Header, Footer, MobileNav, ThemeToggle, SearchOverlay
 │   ├── ui/             # Button, Input, Modal, Drawer, Badge, …
@@ -86,10 +86,16 @@ Notes:
 | Variable | Purpose |
 |----------|---------|
 | `NEXT_PUBLIC_SITE_URL` | Canonical/OG/sitemap/JSON-LD base URL. Falls back to the workers.dev URL in `src/lib/constants/index.ts`. Set to your real domain and rebuild when you have one. |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Client Turnstile sitekey override. Unset in production (defaults to the real key); set to Cloudflare's test key (`1x00000000000000000000AA`) in local `.env.local`. |
+| `TURNSTILE_SECRET` (secret) | Turnstile siteverify secret. While unset the API gates are open (local dev / CI previews). |
+| `TURNSTILE_HOSTNAMES` (secret) | Comma-separated hostname allowlist enforced by `src/lib/security/turnstile.ts`. Set to your production origin. |
+| `ORDER_WEBHOOK_URL` (secret) | Google Apps Script `/exec` URL for the order notification webhook. |
+| `ORDER_WEBHOOK_TOKEN` (secret) | Shared token matched by the Apps Script (`orders.gs`) before it appends a row / emails. |
 | `CLOUDFLARE_API_TOKEN` (CI only) | Workers Scripts:Edit + Account Settings:Read + D1:Edit. Stored as a GitHub Actions secret. |
 
 Copy `.env.example` to `.env` if you need to override `NEXT_PUBLIC_SITE_URL`
-locally. `.env*` is gitignored.
+locally. `.dev.vars` (gitignored) holds Worker bindings for local previews, and
+`.env*` is gitignored.
 
 ## SEO & Content
 
@@ -104,13 +110,45 @@ locally. `.env*` is gitignored.
 ## Payments & Orders — Current State
 
 - Card payments are **deliberately disabled** in checkout. Supported methods:
-  COD (cash on delivery) and InstaPay.
+  COD (cash on delivery) and InstaPay (manual verification via WhatsApp
+  screenshot). No card data is ever collected or transmitted.
 - `POST /api/orders` validates the payload, recomputes totals server-side
-  (incl. promo codes via `src/lib/checkout/`), and returns the order summary.
-  Orders are **not yet persisted** (no database); confirmation is client-side.
-- Phase 4 of the current sweep introduces a D1-backed `orders` store and a
-  `/order/[id]` confirmation page; the API token preset above already
-  includes D1:Edit so CI can migrate.
+  (incl. promo codes via `src/lib/checkout/`), persists to **D1** (`orders` +
+  `order_items`), then best-effort posts to the Google Sheets/email webhook.
+- `POST /api/subscribe` persists newsletter signups to D1 (deduped).
+- The order tracker script lives in `google-apps-script/orders.gs`; its webhook
+  URL/token are Worker secrets (`ORDER_WEBHOOK_URL`, `ORDER_WEBHOOK_TOKEN`).
+- Order numbers are generated with `crypto.getRandomValues` (see
+  `generateOrderNumber` in `src/lib/checkout/orders.ts`).
+
+## Security
+
+- **Turnstile** on `/checkout` and the newsletter form: widget token is
+  verified server-side (`src/lib/security/turnstile.ts`) — action + hostname
+  checks included. Server-side verification is skipped only while
+  `TURNSTILE_SECRET` is unset (local dev / CI previews).
+- **Rate limiting** (`wrangler.jsonc` → `ratelimits`): orders 5/min and
+  subscribe 3/min per IP + email (`src/lib/security/rate-limit.ts`). Skip is
+  automatic on loopback hosts (local previews never throttle QA) and when the
+  binding is absent.
+- **Origin/CSRF gate** on every API POST (`src/lib/security/origin.ts`) plus
+  strict `Content-Type` and request-body size caps.
+- **Security headers**: HSTS, nosniff, X-Frame-Options, Referrer-Policy,
+  Permissions-Policy, and a strict CSP with **CSP reporting**
+  (`/api/csp-report`) for both static assets (`public/_headers`) and API
+  responses (`src/lib/http/security-headers.ts`).
+- Checkout and API routes are `noindex` (`robots.ts` + `public/_headers`) and
+  the server suppresses the `X-Powered-By` header
+  (`next.config.ts` → `poweredByHeader: false`).
+- **Dependency hygiene**: CI runs `npm audit --omit=dev --audit-level=high` and
+  Dependabot tracks npm + GitHub Actions (monthly).
+- **Webhook auth**: the Apps Script only acts when the body `token` matches
+  `ORDER_WEBHOOK_TOKEN`. Rotate that token (update both the Worker secret and
+  `orders.gs`, then redeploy the Apps Script) if it ever leaks.
+- Recommended GitHub settings (manual): enable Secret scanning under
+  Settings → Code security and analysis. Enable 2FA on the Cloudflare and
+  GitHub accounts; keep deploy tokens scoped (<code>Workers Scripts:Edit</code>
+  only).
 
 ## Known vinext Limitations
 

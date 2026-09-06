@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TurnstileWidget } from "@/components/turnstile-widget";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -10,6 +11,7 @@ export function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,13 +20,18 @@ export function Newsletter() {
       setError("Please enter a valid email address.");
       return;
     }
+    if (!turnstileToken) {
+      setStatus("error");
+      setError("Please complete the security check.");
+      return;
+    }
     setStatus("loading");
     setError("");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken }),
       });
       if (!res.ok) throw new Error();
       setStatus("success");
@@ -59,21 +66,29 @@ export function Newsletter() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+            className="flex flex-col gap-3 max-w-md mx-auto"
           >
-            <Input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              error={error}
-              aria-label="Email address"
-              required
-            />
-            <Button type="submit" className="shrink-0" disabled={status === "loading"}>
-              {status === "loading" ? "Subscribing…" : "Subscribe"}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={error}
+                aria-label="Email address"
+                required
+              />
+              <Button type="submit" className="shrink-0" disabled={status === "loading"}>
+                {status === "loading" ? "Subscribing…" : "Subscribe"}
+              </Button>
+            </div>
+            <div className="mx-auto">
+              <TurnstileWidget
+                onToken={setTurnstileToken}
+                onExpire={() => setTurnstileToken("")}
+              />
+            </div>
           </form>
         )}
       </div>
