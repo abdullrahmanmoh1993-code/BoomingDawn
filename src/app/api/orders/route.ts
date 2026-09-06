@@ -15,6 +15,7 @@ import {
   normalizeMobile,
 } from "@/lib/checkout/validation";
 import { isCardPaymentAvailable } from "@/lib/checkout/payment";
+import { persistOrder } from "@/lib/db/orders";
 import type {
   CheckoutLineItem,
   DeliveryAddress,
@@ -165,6 +166,16 @@ export async function POST(request: Request) {
     estimatedDelivery: estimatedDeliveryFor(normalizedAddress.governorate),
     createdAt: new Date().toISOString(),
   };
+
+  try {
+    await persistOrder(order);
+  } catch (error) {
+    console.error("Failed to persist order", error);
+    return jsonError(
+      "We couldn't place your order right now. Please try again in a moment.",
+      500
+    );
+  }
 
   return NextResponse.json({ order }, { status: 201 });
 }
