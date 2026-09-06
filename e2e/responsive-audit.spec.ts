@@ -389,9 +389,30 @@ test.describe("phone mockup: badges never clipped by the screen corner", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/phone-mockup.html", { waitUntil: "load" });
 
-    // The mockup auto-seeds the cart + wishlist stores on load.
+    // Seed the persisted Zustand stores before anything navigates. This runs in
+    // every frame incl. the mockup's iframe, so the storefront hydrates with the
+    // badges already present (same approach as header.spec.ts). Depending on the
+    // mockup's load-seed-reload timing is racy in CI.
+    await page.addInitScript(() => {
+      const cartSeed = {
+        state: {
+          items: [
+            { productId: "nautical-tee", variantId: "nautical-tee-black-m", quantity: 1 },
+          ],
+          isOpen: false,
+        },
+        version: 0,
+      };
+      const wishlistSeed = {
+        state: { productIds: ["nautical-tee"] },
+        version: 0,
+      };
+      localStorage.setItem("tbd-cart", JSON.stringify(cartSeed));
+      localStorage.setItem("tbd-wishlist", JSON.stringify(wishlistSeed));
+    });
+
+    await page.goto("/phone-mockup.html", { waitUntil: "load" });
     const frame = page.frameLocator("#frame");
     const cartBadge = frame.locator('header button[aria-label^="Shopping bag"] span');
     const wishBadge = frame.locator('header a[href="/wishlist"] span');

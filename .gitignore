@@ -38,6 +38,10 @@ dev-server.log
 .env*
 !.env.example
 
+# local wrangler/vite dev secrets
+.dev.vars
+.dev.vars.*
+
 # vercel
 .vercel
 

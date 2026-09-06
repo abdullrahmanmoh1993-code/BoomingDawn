@@ -5,6 +5,8 @@ interface __BaseEnv_Env {
 	DB: D1Database;
 	CF_VERSION_METADATA: WorkerVersionMetadata;
 	ASSETS: Fetcher;
+	ORDER_WEBHOOK_URL?: string;
+	ORDER_WEBHOOK_TOKEN?: string;
 }
 declare namespace Cloudflare {
 	interface Env extends __BaseEnv_Env {}

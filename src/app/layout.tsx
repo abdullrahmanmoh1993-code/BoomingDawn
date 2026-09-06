@@ -1,7 +1,7 @@
 import { Inter, Anton } from "next/font/google";
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { siteConfig } from "@/lib/constants";
+import { CloudflareBeacon } from "@/components/analytics/cloudflare-beacon";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -104,11 +104,7 @@ export default function RootLayout({
             __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
           }}
         />
-        <Script
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          strategy="afterInteractive"
-          data-cf-beacon='{"token":"1f9609b3afa24e32860d31dc0cb1eaec","spa":true}'
-        />
+        <CloudflareBeacon />
         {children}
       </body>
     </html>

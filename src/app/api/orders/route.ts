@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { products } from "@/lib/data";
 import { DELIVERY_OPTIONS } from "@/lib/data/checkout";
 import {
@@ -16,6 +16,7 @@ import {
 } from "@/lib/checkout/validation";
 import { isCardPaymentAvailable } from "@/lib/checkout/payment";
 import { persistOrder } from "@/lib/db/orders";
+import { notifyNewOrder } from "@/lib/notify/orders";
 import type {
   CheckoutLineItem,
   DeliveryAddress,
@@ -176,6 +177,8 @@ export async function POST(request: Request) {
       500
     );
   }
+
+  after(() => notifyNewOrder(order));
 
   return NextResponse.json({ order }, { status: 201 });
 }
