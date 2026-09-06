@@ -132,11 +132,8 @@ test.describe("Button-as-link renders real anchors", () => {
     await page.goto("/", { waitUntil: "load" });
 
     const shopLink = page.getByRole("link", { name: "Shop the Collection" });
-    const storyLink = page.getByRole("link", { name: "View the Story" });
     await expect(shopLink).toBeVisible();
-    await expect(storyLink).toBeVisible();
     await expect(shopLink).toHaveAttribute("href", "/products");
-    await expect(storyLink).toHaveAttribute("href", "/about");
 
     // Client-side navigation still works through the anchor.
     await shopLink.click();

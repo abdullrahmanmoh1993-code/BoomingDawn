@@ -72,9 +72,6 @@ export function Hero() {
           <Button variant="primary" size="lg" href="/products" className="w-full sm:w-auto">
             Shop the Collection
           </Button>
-          <Button variant="outline" size="lg" href="/about" className="w-full sm:w-auto">
-            View the Story
-          </Button>
         </motion.div>
       </div>
 
